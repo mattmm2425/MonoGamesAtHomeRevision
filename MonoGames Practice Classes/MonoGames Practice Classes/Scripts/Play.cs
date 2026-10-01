@@ -8,18 +8,19 @@ namespace MonoGames_Practice_Classes.Scripts
     {
 
         public E_Gamestates Update()
-        { 
+        {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 return E_Gamestates.Menu;
             }
-
-            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            else if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
                 return E_Gamestates.GameOver;
             }
-
-            return E_Gamestates.Play;
+            else
+            {
+                return E_Gamestates.Play;
+            }
         }
 
         public void Draw(GraphicsDevice graphics)

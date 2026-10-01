@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace MonoGames_Practice_Classes.Scripts
 {
@@ -13,13 +14,14 @@ namespace MonoGames_Practice_Classes.Scripts
         {
             
             totalTime = 0.0f;
-            timeLimit = 5.0f;
+            timeLimit = 3.0f;
 
         }
 
-        public E_Gamestates Update(GameTime gameTime)
+        public E_Gamestates Update(double deltaTime)
         {
-            totalTime = gameTime.ElapsedGameTime.TotalSeconds;
+            deltaTime += totalTime;
+            Debug.Write(deltaTime);
 
             if (totalTime >= timeLimit)
             {
@@ -28,8 +30,9 @@ namespace MonoGames_Practice_Classes.Scripts
             }
             else
             { 
-                return E_Gamestates.Menu;
+                return E_Gamestates.GameOver;
             }
+            
 
         }
 

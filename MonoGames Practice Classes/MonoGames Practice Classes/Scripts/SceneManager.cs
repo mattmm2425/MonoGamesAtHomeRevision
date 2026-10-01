@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
 namespace MonoGames_Practice_Classes.Scripts
 {
@@ -14,14 +15,14 @@ namespace MonoGames_Practice_Classes.Scripts
 
     internal class SceneManager
     {
-        E_Gamestates scene;
+        E_Gamestates e_scene;
         Menu menu;
         Play playing;
         GameOver gameEnd;
 
         public SceneManager(Vector2 dimensions)
         {
-            scene = E_Gamestates.Menu;
+            e_scene = E_Gamestates.Menu;
             playing = new Play();
             menu = new Menu(dimensions);
             gameEnd = new GameOver();
@@ -30,21 +31,54 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public void Update(Game1 game, GameTime time)
         {
+            double deltaTime = time.ElapsedGameTime.TotalSeconds;
 
+            switch (e_scene)
+            { 
+                case E_Gamestates.Menu:
+                    SwitchState(menu.Update(game));
+                    break;
+                case E_Gamestates.Play:
+                    SwitchState(playing.Update());
+                    break;
+                case E_Gamestates.GameOver:
+                    SwitchState(gameEnd.Update(deltaTime));
+                    break;
+                default: break;
+            }
 
+            if (Keyboard.GetState().IsKeyDown(Keys.C))
+            {
+                Debug.Write(e_scene);
+            }
         }
 
         //graphics is used to clear colour
         public void Draw(GraphicsDevice graphics)
-        { 
-        
+        {
+
+            switch (e_scene)
+            {
+                case E_Gamestates.Menu:
+                    menu.Draw(graphics);
+                    break;
+                case E_Gamestates.Play:
+                    playing.Draw(graphics);
+                    break;
+                case E_Gamestates.GameOver:
+                    gameEnd.Draw(graphics);
+                    break;
+                default : break;
+
+            }
+
 
         }
 
         //method for reading current state
         private void SwitchState(E_Gamestates state)
         {
-            scene = state;
+            e_scene = state;
         
         }
 
