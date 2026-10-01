@@ -11,10 +11,11 @@ namespace MonoGames_Practice_Classes.Scripts
         private int initialLives;
         private int score;
 
-        public Player(Vector2 startPos, int lives) : base(startPos)
+        public Player(Vector2 startPos, int paramLives) : base(startPos)
         {
-            this.initialLives = lives;
-            this. score = 0;
+            initialLives = paramLives;
+            lives = paramLives;
+            score = 0;
         }
 
         public int GetLives()
