@@ -11,14 +11,37 @@ namespace MonoGames_Practice_Classes.Scripts
 
         }
 
-        public void Chase()
+        public void Chase(Player player)
         { 
-        
+            if (player.GetCurrentPosition().X > currentPosition.X)
+            {
+                Right();
+            }
+            else if (player.GetCurrentPosition().X < currentPosition.X)
+            {
+                Left();
+            }
+
+            if (player.GetCurrentPosition().Y > currentPosition.Y)
+            {
+                Down();
+            }
+            else if (player.GetCurrentPosition().Y < currentPosition.Y)
+            {
+                Up();
+            }
         }
 
-        public bool Caught()
-        { 
-            return false;
+        public bool Caught(Player player)
+        {
+            if (player.GetCurrentPosition() == currentPosition)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }

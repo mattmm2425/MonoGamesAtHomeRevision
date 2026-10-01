@@ -1,11 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.IO;
 
 namespace MonoGames_Practice_Classes.Scripts
 {
     internal class Play
     {
+        Player player;
+        Enemy enemy;
+
+
 
         public E_Gamestates Update()
         {
