@@ -20,7 +20,7 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public E_Gamestates Update(double deltaTime)
         {
-            deltaTime += totalTime;
+            totalTime += deltaTime;
             Debug.Write(deltaTime);
 
             if (totalTime >= timeLimit)
