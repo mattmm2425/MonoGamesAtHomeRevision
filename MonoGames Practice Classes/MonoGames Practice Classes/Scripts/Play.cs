@@ -26,6 +26,7 @@ namespace MonoGames_Practice_Classes.Scripts
             }
             else if (enemy.Caught(player) == true && player.GetLives() <= 0)
             {
+                Console.WriteLine("Player Is Dead");
                 return E_Gamestates.GameOver;
             }
             else if (enemy.Caught(player) == true && player.GetLives() > 0)
