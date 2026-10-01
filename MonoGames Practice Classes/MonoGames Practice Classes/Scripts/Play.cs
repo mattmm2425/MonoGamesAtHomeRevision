@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -16,6 +17,12 @@ namespace MonoGames_Practice_Classes.Scripts
             player = new Player(new Vector2(300, 300), 3);
             enemy = new Enemy(new Vector2(100, 100));
 
+        }
+
+        public void LoadContent(ContentManager cm)
+        {
+            player.LoadContent(cm, "CharacterSprites");
+            enemy.LoadContent(cm, "OrcEnemySprites");
         }
 
         public E_Gamestates Update()

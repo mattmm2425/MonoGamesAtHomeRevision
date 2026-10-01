@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
+
 
 namespace MonoGames_Practice_Classes.Scripts
 {
@@ -15,20 +17,20 @@ namespace MonoGames_Practice_Classes.Scripts
         { 
             if (player.GetCurrentPosition().X > currentPosition.X)
             {
-                Right();
+                Right(1);
             }
             else if (player.GetCurrentPosition().X < currentPosition.X)
             {
-                Left();
+                Left(1);
             }
 
             if (player.GetCurrentPosition().Y > currentPosition.Y)
             {
-                Down();
+                Down(1);
             }
             else if (player.GetCurrentPosition().Y < currentPosition.Y)
             {
-                Up();
+                Up(1);
             }
         }
 

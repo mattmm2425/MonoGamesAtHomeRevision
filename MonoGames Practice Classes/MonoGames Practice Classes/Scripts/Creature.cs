@@ -1,6 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
+using SharpDX.Direct3D9;
+using System.Runtime.Intrinsics.X86;
 
 namespace MonoGames_Practice_Classes.Scripts
 {
@@ -8,6 +11,7 @@ namespace MonoGames_Practice_Classes.Scripts
     {
         protected Vector2 currentPosition;
         protected Vector2 startPosition;
+        protected Texture2D Sprite; 
 
 
         public Creature(Vector2 startPos)
@@ -16,25 +20,36 @@ namespace MonoGames_Practice_Classes.Scripts
             currentPosition = startPos;
         }
 
-
-        public void Up() //moves character up by 1 unit on the Y axis
+        public void LoadContent(ContentManager cm, string spriteName)
         {
-            currentPosition.Y -= 1;
+            Sprite = cm.Load<Texture2D>(spriteName);
+
         }
 
-        public void Down() //moves character down by 1 unit on the Y axis
+        public void Draw(SpriteBatch spriteBatch, Rectangle rect)
+        {
+            spriteBatch.Draw(Sprite, startPosition, rect, Color.White);
+        }
+
+
+        public virtual void Up(float speed) //moves character up by 1 unit on the Y axis
+        {
+            currentPosition.Y -= speed;
+        }
+
+        public virtual void Down(float speed) //moves character down by 1 unit on the Y axis
         { 
-            currentPosition.Y += 1;
+            currentPosition.Y += speed;
         }
 
-        public void Left() //moves character left by 1 unit on the X axis
+        public virtual void Left(float speed) //moves character left by 1 unit on the X axis
         {
-            currentPosition.X -= 1;
+            currentPosition.X -= speed;
         }
 
-        public void Right() //moves character right by 1 unit on the X axis
+        public virtual void Right(float speed) //moves character right by 1 unit on the X axis
         {
-            currentPosition.X += 1;
+            currentPosition.X += speed;
         }
 
         public void ResetPosition() //resets character position to starting position
