@@ -55,10 +55,32 @@ namespace MonoGames_Practice_Classes.Scripts
             
         }
 
-        public void Draw(GraphicsDevice graphics)
+        public void Draw(GraphicsDevice graphics, SpriteBatch sprite)
         {
             graphics.Clear(Color.CornflowerBlue);
+            sprite.Begin();
+            player.Draw(sprite, new Rectangle(0,0,52,72));
+            enemy.Draw(sprite, new Rectangle(0, 0, 52, 72));
+        }
 
+        private void PlayerMovement()
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            {
+                player.Left();
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.D))
+            {
+                player.Right();
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.W))
+            {
+                player.Up();
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.S))
+            {
+                player.Up();
+            }
         }
     }
 }
