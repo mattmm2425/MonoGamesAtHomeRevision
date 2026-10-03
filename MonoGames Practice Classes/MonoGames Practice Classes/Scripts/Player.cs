@@ -13,19 +13,18 @@ namespace MonoGames_Practice_Classes.Scripts
         private int score;
 
         private float speed;
+        public int spriteChooser;
 
-        public Player(Vector2 startPos, int paramLives, float paramSpeed) : base(startPos) //constructor for the play class to use to create an instance of the player once playing has begun
+        public Player(Vector2 startPos, int paramLives) : base(startPos) //constructor for the play class to use to create an instance of the player once playing has begun
         {
             initialLives = paramLives;
-            lives = paramLives;
-            speed = paramSpeed;     //using speed as an input parameter so can change speed from play script (getting comfortable with overriding and adding input parameters into constructors)
+            lives = paramLives;     //using speed as an input parameter so can change speed from play script (getting comfortable with overriding and adding input parameters into constructors)
             score = 0;
         }
 
         public override void Up(float speed)    //overriding up movement function and changing the speed of the player
         {
             base.Up(speed);
-            
         }
 
         public override void Down(float speed)

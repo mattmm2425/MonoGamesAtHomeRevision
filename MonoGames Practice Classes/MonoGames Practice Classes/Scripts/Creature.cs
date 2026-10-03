@@ -12,7 +12,10 @@ namespace MonoGames_Practice_Classes.Scripts
         //protected variables that only the child classes can inherit
         protected Vector2 currentPosition;
         protected Vector2 startPosition;
+        protected float rotation;
         protected Texture2D Sprite; //all characters need sprite so adding it in parent class saves time
+        protected int spriteSheetY;
+        protected int spriteSheetX;
 
         //public constructor
         public Creature(Vector2 startPos)
@@ -40,7 +43,7 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public virtual void Down(float speed) //moves character down by 1 unit on the Y axis
         { 
-            currentPosition.Y = currentPosition.Y + speed;
+            currentPosition.Y += speed;
 
         }
 
@@ -51,7 +54,7 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public virtual void Right(float speed) //moves character right by 1 unit on the X axis
         {
-            currentPosition.X = currentPosition.X + speed;
+            currentPosition.X += speed;
         }
 
         public void ResetPosition() //resets character position to starting position

@@ -20,7 +20,8 @@ namespace MonoGames_Practice_Classes.Scripts
             {
                 Right(1);
             }
-            else if (player.GetCurrentPosition().X < currentPosition.X)
+            
+            if (player.GetCurrentPosition().X < currentPosition.X)
             {
                 Left(1);
             }
@@ -29,7 +30,8 @@ namespace MonoGames_Practice_Classes.Scripts
             {
                 Down(1);
             }
-            else if (player.GetCurrentPosition().Y < currentPosition.Y)
+
+            if (player.GetCurrentPosition().Y < currentPosition.Y)
             {
                 Up(1);
             }

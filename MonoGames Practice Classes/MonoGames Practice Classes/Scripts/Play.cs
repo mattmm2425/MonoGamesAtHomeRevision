@@ -12,9 +12,11 @@ namespace MonoGames_Practice_Classes.Scripts
         Player player; //references the player script
         Enemy enemy; //references the enemy script
 
+        private int spriteChooser;
+
         public Play() //constructor that calls forth bought the enemy and player construcotrs and puts in their parameters
         {
-            player = new Player(new Vector2(500, 500), 3, 0.2f);
+            player = new Player(new Vector2 (200, 500), 3);
             enemy = new Enemy(new Vector2(100, 100));
 
         }
@@ -33,6 +35,9 @@ namespace MonoGames_Practice_Classes.Scripts
             }
             else if (enemy.Caught(player) == true && player.GetLives() <= 0) //if the player gets caught and they have no lives remaining then the player gets taken to the gameover screen
             {
+                enemy.ResetPosition();
+                player.ResetPosition();
+                player.ResetLives();
                 Console.WriteLine("Player Is Dead");
                 return E_Gamestates.GameOver;
             }
@@ -45,11 +50,10 @@ namespace MonoGames_Practice_Classes.Scripts
             }
             else //if the player hasn't been caught or pressed escape the else function will run
             {
-                player.Down(0.5f);
-                PlayerMovement(0.2f); //calls movement function
+
+                PlayerMovement(4f); //calls movement function
                 enemy.Chase(player);    //calls enemy chase function and inputs new instance of the player so the enemy character knows who to chases
-                Console.WriteLine("Player Position: " + player.GetCurrentPosition());
-                //Console.WriteLine("Player Lives: " + player.GetLives());
+                Console.WriteLine("Player Lives: " + player.GetLives());
                 return E_Gamestates.Play;   //user continues in play state until conditions chase
             }
 
@@ -60,7 +64,7 @@ namespace MonoGames_Practice_Classes.Scripts
         {
             graphics.Clear(Color.CornflowerBlue);   //sets background of the playing state
             sprite.Begin();
-            player.Draw(sprite, new Rectangle(0, 0 , 52, 72));  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
+            player.Draw(sprite, new Rectangle(0, spriteChooser, 52, 72));  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
             enemy.Draw(sprite, new Rectangle(0, 0, 52, 72));
             sprite.End();
         }
@@ -70,22 +74,26 @@ namespace MonoGames_Practice_Classes.Scripts
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
                 player.Right(speed);
+                spriteChooser = 144;
             } 
 
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
                 player.Left(speed);
+                spriteChooser = 72;
             }
 
             
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 player.Up(speed);
+                spriteChooser = 216;
             }
-            
+
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
                 player.Down(speed);
+                spriteChooser = 0;
             }
         }
     }
