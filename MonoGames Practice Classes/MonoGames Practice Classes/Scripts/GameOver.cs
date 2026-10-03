@@ -9,6 +9,7 @@ namespace MonoGames_Practice_Classes.Scripts
     {
         private double timeLimit;
         private double totalTime;
+        Player player;
 
         public GameOver()
         {
@@ -27,6 +28,7 @@ namespace MonoGames_Practice_Classes.Scripts
             {
                 totalTime = 0;
                 return E_Gamestates.Menu;
+                
             }
             else
             { 

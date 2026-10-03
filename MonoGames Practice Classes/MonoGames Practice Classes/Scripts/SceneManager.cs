@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
 
 namespace MonoGames_Practice_Classes.Scripts
@@ -47,23 +48,19 @@ namespace MonoGames_Practice_Classes.Scripts
                 default: break;
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.C))
-            {
-                Debug.Write(e_scene);
-            }
         }
 
         //graphics is used to clear colour
-        public void Draw(GraphicsDevice graphics)
+        public void Draw(GraphicsDevice graphics, SpriteBatch sprite)
         {
-
             switch (e_scene)
             {
+             
                 case E_Gamestates.Menu:
                     menu.Draw(graphics);
                     break;
                 case E_Gamestates.Play:
-                    playing.Draw(graphics);
+                    playing.Draw(graphics, sprite);
                     break;
                 case E_Gamestates.GameOver:
                     gameEnd.Draw(graphics);
@@ -71,14 +68,18 @@ namespace MonoGames_Practice_Classes.Scripts
                 default : break;
 
             }
-
-
+            
         }
 
         //method for reading current state
         private void SwitchState(E_Gamestates state)
         {
             e_scene = state;
+        }
+
+        public void LoadContent(ContentManager cm)
+        {
+            playing.LoadContent(cm);
         
         }
 

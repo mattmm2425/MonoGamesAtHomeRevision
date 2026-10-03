@@ -12,10 +12,6 @@ namespace MonoGames_Practice_Classes
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private int Red = 45;
-        private int Green = 160;
-        private int Blue = 120;
-
         private SceneManager scene;
         public Vector2 screenWH;
 
@@ -40,6 +36,8 @@ namespace MonoGames_Practice_Classes
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            scene.LoadContent(Content);
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -61,7 +59,7 @@ namespace MonoGames_Practice_Classes
             //GraphicsDevice.Clear(Color.FromNonPremultiplied(Red, Green, Blue, 225));
 
             // TODO: Add your drawing code here
-            scene.Draw(GraphicsDevice);
+            scene.Draw(GraphicsDevice, _spriteBatch);
 
             base.Draw(gameTime);
         }
