@@ -64,8 +64,8 @@ namespace MonoGames_Practice_Classes.Scripts
         {
             graphics.Clear(Color.CornflowerBlue);   //sets background of the playing state
             sprite.Begin();
-            player.Draw(sprite, new Rectangle(0, spriteChooser, 52, 72));  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
-            enemy.Draw(sprite, new Rectangle(0, 0, 52, 72));
+            player.Draw(sprite, new Rectangle(0, player.spriteSheetY, 52, 72));  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
+            enemy.Draw(sprite, new Rectangle(0, enemy.spriteSheetY, 52, 72));
             sprite.End();
         }
 
@@ -74,26 +74,22 @@ namespace MonoGames_Practice_Classes.Scripts
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
                 player.Right(speed);
-                spriteChooser = 144;
             } 
 
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
                 player.Left(speed);
-                spriteChooser = 72;
             }
 
             
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 player.Up(speed);
-                spriteChooser = 216;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
                 player.Down(speed);
-                spriteChooser = 0;
             }
         }
     }

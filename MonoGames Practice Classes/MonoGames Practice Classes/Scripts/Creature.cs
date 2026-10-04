@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using SharpDX.Direct3D9;
 using System.Runtime.Intrinsics.X86;
+using System.Runtime.CompilerServices;
 
 namespace MonoGames_Practice_Classes.Scripts
 {
@@ -14,7 +15,7 @@ namespace MonoGames_Practice_Classes.Scripts
         protected Vector2 startPosition;
         protected float rotation;
         protected Texture2D Sprite; //all characters need sprite so adding it in parent class saves time
-        protected int spriteSheetY;
+        public int spriteSheetY { get; protected set; }
         protected int spriteSheetX;
 
         //public constructor
@@ -39,22 +40,25 @@ namespace MonoGames_Practice_Classes.Scripts
         public virtual void Up(float speed) //moves character up by 1 unit on the Y axis
         {
             currentPosition.Y -= speed;
+            spriteSheetY = 0;
         }
 
         public virtual void Down(float speed) //moves character down by 1 unit on the Y axis
         { 
             currentPosition.Y += speed;
-
+            spriteSheetY = 0;
         }
 
         public virtual void Left(float speed) //moves character left by 1 unit on the X axis
         {
             currentPosition.X -= speed;
+            spriteSheetY = 0;
         }
 
         public virtual void Right(float speed) //moves character right by 1 unit on the X axis
         {
             currentPosition.X += speed;
+            spriteSheetY = 0;
         }
 
         public void ResetPosition() //resets character position to starting position

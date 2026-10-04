@@ -25,21 +25,25 @@ namespace MonoGames_Practice_Classes.Scripts
         public override void Up(float speed)    //overriding up movement function and changing the speed of the player
         {
             base.Up(speed);
+            spriteSheetY = 216;
         }
 
         public override void Down(float speed)
         {
             base.Down(speed);
+            spriteSheetY = 0;
         }
 
         public override void Left(float speed)  //overriding left movement function and changing the speed of the player
         {
             base.Left(speed);
+            spriteSheetY = 72;
         }
 
         public override void Right(float speed) //overriding right movement function and changing the speed of the player
         {
             base.Right(speed);
+            spriteSheetY = 144;
         }
 
         public int GetLives()

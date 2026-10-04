@@ -19,21 +19,25 @@ namespace MonoGames_Practice_Classes.Scripts
             if (player.GetCurrentPosition().X > currentPosition.X)
             {
                 Right(1);
+                spriteSheetY = 144;
             }
             
             if (player.GetCurrentPosition().X < currentPosition.X)
             {
                 Left(1);
+                spriteSheetY = 72;
             }
             // two seperate if statements to allow this enemy to chase the player character to in both the x and y direction
             if (player.GetCurrentPosition().Y > currentPosition.Y)
             {
                 Down(1);
+                spriteSheetY = 0;
             }
 
             if (player.GetCurrentPosition().Y < currentPosition.Y)
             {
                 Up(1);
+                spriteSheetY = 216;
             }
         }
 
