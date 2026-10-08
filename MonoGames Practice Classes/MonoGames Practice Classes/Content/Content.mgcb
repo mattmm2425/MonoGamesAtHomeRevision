@@ -39,7 +39,7 @@
 /processorParam:Version=3.8.5.1
 /build:OrcEnemySprites.png
 
-#begin Wall1.png
+#begin StoneWallTexture.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -50,5 +50,5 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /processorParam:Version=3.8.5.1
-/build:Wall1.png
+/build:StoneWallTexture.png
 

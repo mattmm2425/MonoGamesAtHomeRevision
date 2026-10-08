@@ -21,13 +21,11 @@ namespace MonoGames_Practice_Classes.Scripts
         Play playing;
         GameOver gameEnd;
 
-        public SceneManager(Vector2 dimensions)
+        public SceneManager()
         {
             e_scene = E_Gamestates.Menu;
             playing = new Play();
-            menu = new Menu(dimensions);
             gameEnd = new GameOver();
-
         }
 
         public void Update(Game1 game, GameTime time)
@@ -77,11 +75,15 @@ namespace MonoGames_Practice_Classes.Scripts
             e_scene = state;
         }
 
-        public void LoadContent(ContentManager cm)
-        {
-            playing.LoadContent(cm);
         
+        public void LoadContent(ContentManager cm, GraphicsDeviceManager graphics)
+        {
+            playing.LoadContent(cm, graphics);
+            graphics.PreferredBackBufferWidth = (int)playing.GetScreenWH().X;
+            graphics.PreferredBackBufferHeight = (int)playing.GetScreenWH().Y;
+            graphics.ApplyChanges();
+            menu = new Menu(new Vector2(playing.GetScreenWH().X, playing.GetScreenWH().Y));
         }
-
+        
     }
 }

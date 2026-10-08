@@ -47,21 +47,22 @@ namespace MonoGames_Practice_Classes.Scripts
             return currentLevel++;
         }
 
+        
         public void BuildNewLevel()
         { 
-            levelContent = File.ReadAllLines($"Content/Levels/Level " + currentLevel + ".txt");
+            levelContent = File.ReadAllLines(@"..\Levels\Level " + currentLevel + ".txt");
             foreach (var line in levelContent)
             { 
                 Console.WriteLine(line);
             }
         }
-
+        
         public void ResetLevels()
         { 
             currentLevel = 1;
             BuildNewLevel();
         }
-
+        
         public void Draw(SpriteBatch spriteBatch)
         { 
             for (int column = 0; column < GetArrayHeight(); column++)

@@ -13,22 +13,18 @@ namespace MonoGames_Practice_Classes
         private SpriteBatch _spriteBatch;
 
         private SceneManager scene;
-        public Vector2 screenWH;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            _graphics.PreferredBackBufferHeight = 768;
-            _graphics.PreferredBackBufferWidth = 1024;
-            screenWH = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            scene = new SceneManager(screenWH);
+            scene = new SceneManager();
 
             base.Initialize();
         }
@@ -36,7 +32,7 @@ namespace MonoGames_Practice_Classes
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            scene.LoadContent(Content);
+            scene.LoadContent(Content, _graphics);
 
 
             // TODO: use this.Content to load your game content here

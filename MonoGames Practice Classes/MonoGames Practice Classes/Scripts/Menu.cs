@@ -18,11 +18,11 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public E_Gamestates Update(Game1 game)
         {
-            if (Mouse.GetState().X >= 0 && Mouse.GetState().X <= 1023 && Mouse.GetState().Y >= 0 && Mouse.GetState().Y <= 767 && Mouse.GetState().LeftButton == ButtonState.Pressed)
+            if (Mouse.GetState().X >= 0 && Mouse.GetState().X <= screenWH.X - 1 && Mouse.GetState().Y >= 0 && Mouse.GetState().Y <= screenWH.Y - 1 && Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
                 return E_Gamestates.Play; //whilst in the menu if the player presses left mouse on the game screen they will be taken into the playing state
             }
-            else if (Mouse.GetState().X >= 0 && Mouse.GetState().X <= 1023 && Mouse.GetState().Y >= 0 && Mouse.GetState().Y <= 767 && Mouse.GetState().RightButton == ButtonState.Pressed)
+            else if (Mouse.GetState().X >= 0 && Mouse.GetState().X <= screenWH.X - 1 && Mouse.GetState().Y >= 0 && Mouse.GetState().Y <= screenWH.Y - 1 && Mouse.GetState().RightButton == ButtonState.Pressed)
             {
                 return E_Gamestates.GameOver; //whilst in the menu if the player presses right mouse on the game screen they will be taken into the playing state
             }

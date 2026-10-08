@@ -12,18 +12,24 @@ namespace MonoGames_Practice_Classes.Scripts
         Player player; //references the player script
         Enemy enemy; //references the enemy script
 
+        private Level level;
 
-        public Play() //constructor that calls forth bought the enemy and player construcotrs and puts in their parameters
+        public Play() //constructor that calls forth the enemy and player constructors and puts in their parameters
         {
             player = new Player(new Vector2 (200, 500), 3);
             enemy = new Enemy(new Vector2(100, 100));
+            level = new Level();
 
         }
 
-        public void LoadContent(ContentManager cm) 
+        public void LoadContent(ContentManager cm, GraphicsDeviceManager graphics) 
         {
             player.LoadContent(cm, "CharacterSprites"); //loads the sprite sheet of CharacterSprites onto the 2D texture asset
             enemy.LoadContent(cm, "OrcEnemySprites"); //loads the sprite sheet of the OrcEnemySprites onto the 2D texture asset
+            level.LoadContent(cm, "StoneWallTexture"); //loads the sprite sheet of the StoneWallTexture onto the 2D texture asset
+            //graphics.PreferredBackBufferWidth = (int)level.GetLevelSize().X; //sets the width of the game window to the width of the level
+            //graphics.PreferredBackBufferHeight = (int)level.GetLevelSize().Y; //sets the height of the game window to the height of the level
+            //graphics.ApplyChanges();
         }
 
         public E_Gamestates Update()
@@ -37,7 +43,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 enemy.ResetPosition();
                 player.ResetPosition();
                 player.ResetLives();
-                Console.WriteLine("Player Is Dead");
+                level.ResetLevels();
                 return E_Gamestates.GameOver;
             }
             else if (enemy.Caught(player) == true && player.GetLives() > 0) //if the player gets caught and they do have lives remaining then they lose a life and both their locations get reset
@@ -63,12 +69,18 @@ namespace MonoGames_Practice_Classes.Scripts
         {
             graphics.Clear(Color.CornflowerBlue);   //sets background of the playing state
             sprite.Begin();
+            level.Draw(sprite);
             player.Draw(sprite, new Rectangle(0, player.spriteSheetY, 52, 72));  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
             enemy.Draw(sprite, new Rectangle(0, enemy.spriteSheetY, 52, 72));
             sprite.End();
         }
 
-        private void PlayerMovement(float speed)    //player movement function that takes in an input
+        public Vector2 GetScreenWH()
+        {
+            return level.GetLevelSize(); //returns the level size to the scene manager so it can be used to set the game window size
+        }
+
+        private void PlayerMovement(float speed)    //player movement function that takes in an input of speed
         {
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
