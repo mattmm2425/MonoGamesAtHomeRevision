@@ -42,9 +42,14 @@ namespace MonoGames_Practice_Classes.Scripts
             return new Vector2(GetArrayWidth() * textureWH.X, GetArrayHeight() * textureWH.Y);
         }
 
-        private int NextLevel()
+        public int GetCurrentLevel()
         {
-            return currentLevel++;
+            return currentLevel;
+        }
+        public void NextLevel()
+        {
+            currentLevel ++;
+            BuildNewLevel();
         }
 
         

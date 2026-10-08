@@ -3,7 +3,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Drawing.Imaging.Effects;
 using System.IO;
+using System.Reflection;
 
 namespace MonoGames_Practice_Classes.Scripts
 {
@@ -27,9 +29,6 @@ namespace MonoGames_Practice_Classes.Scripts
             player.LoadContent(cm, "CharacterSprites"); //loads the sprite sheet of CharacterSprites onto the 2D texture asset
             enemy.LoadContent(cm, "OrcEnemySprites"); //loads the sprite sheet of the OrcEnemySprites onto the 2D texture asset
             level.LoadContent(cm, "StoneWallTexture"); //loads the sprite sheet of the StoneWallTexture onto the 2D texture asset
-            //graphics.PreferredBackBufferWidth = (int)level.GetLevelSize().X; //sets the width of the game window to the width of the level
-            //graphics.PreferredBackBufferHeight = (int)level.GetLevelSize().Y; //sets the height of the game window to the height of the level
-            //graphics.ApplyChanges();
         }
 
         public E_Gamestates Update()
@@ -37,6 +36,20 @@ namespace MonoGames_Practice_Classes.Scripts
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 return E_Gamestates.Menu; //takes players back to the menu if they press the escape button
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.Enter) && level.GetCurrentLevel() < 2) //if the player presses Enter then the game will reset the player and enemy positions, reset the players lives and reset the level
+            {
+                level.NextLevel();
+                player.ResetPosition();
+                enemy.ResetPosition();
+                return E_Gamestates.Play;
+            }
+            else if (Keyboard.GetState().IsKeyDown(Keys.P) && level.GetCurrentLevel() > 1) //if the player presses P then the game will reset the player and enemy positions, reset the players lives and reset the level
+            {
+                level.ResetLevels();
+                player.ResetPosition();
+                enemy.ResetPosition();
+                return E_Gamestates.Play;
             }
             else if (enemy.Caught(player) == true && player.GetLives() <= 0) //if the player gets caught and they have no lives remaining then the player gets taken to the gameover screen
             {
@@ -103,5 +116,6 @@ namespace MonoGames_Practice_Classes.Scripts
                 player.Down(speed);
             }
         }
+        
     }
 }
