@@ -26,13 +26,13 @@
 /processorParam:Version=3.8.5.1
 /build:CharacterSprites.png
 
-#begin File.spritefont
+#begin GameFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /processorParam:Version=3.8.5.1
-/build:File.spritefont
+/build:GameFont.spritefont
 
 #begin OrcEnemySprites.png
 /importer:TextureImporter

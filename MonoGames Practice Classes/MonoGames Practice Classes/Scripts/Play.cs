@@ -81,11 +81,11 @@ namespace MonoGames_Practice_Classes.Scripts
         public void Draw(GraphicsDevice graphics, SpriteBatch sprite)
         {
             graphics.Clear(Color.CornflowerBlue);   //sets background of the playing state
-            sprite.Begin();
+            //sprite.Begin();
             level.Draw(sprite);
             player.Draw(sprite, new Rectangle(0, player.spriteSheetY, 52, 72));  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
             enemy.Draw(sprite, new Rectangle(0, enemy.spriteSheetY, 52, 72));
-            sprite.End();
+            //sprite.End();
         }
 
         public Vector2 GetScreenWH()
@@ -117,5 +117,10 @@ namespace MonoGames_Practice_Classes.Scripts
             }
         }
         
+        public int GetLevel()
+        {
+            return level.GetCurrentLevel();
+        }
+
     }
 }

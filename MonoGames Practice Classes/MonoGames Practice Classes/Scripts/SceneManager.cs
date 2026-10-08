@@ -21,6 +21,9 @@ namespace MonoGames_Practice_Classes.Scripts
         Play playing;
         GameOver gameEnd;
 
+        private SpriteFont gameFont;
+        private string gameText;
+
         public SceneManager()
         {
             e_scene = E_Gamestates.Menu;
@@ -36,12 +39,15 @@ namespace MonoGames_Practice_Classes.Scripts
             { 
                 case E_Gamestates.Menu:
                     SwitchState(menu.Update(game));
+                    SetMessage("Press Left Click to Start");
                     break;
                 case E_Gamestates.Play:
                     SwitchState(playing.Update());
+                    SetMessage("Level: " + playing.GetLevel());
                     break;
                 case E_Gamestates.GameOver:
                     SwitchState(gameEnd.Update(deltaTime));
+                    SetMessage("Game Over!");
                     break;
                 default: break;
             }
@@ -53,15 +59,24 @@ namespace MonoGames_Practice_Classes.Scripts
         {
             switch (e_scene)
             {
-             
+                
                 case E_Gamestates.Menu:
+                    sprite.Begin();
                     menu.Draw(graphics);
+                    sprite.DrawString(gameFont, gameText, new Vector2(playing.GetScreenWH().X / 2 - 500, playing.GetScreenWH().Y / 2), Color.White);
+                    sprite.End();
                     break;
                 case E_Gamestates.Play:
+                    sprite.Begin();
                     playing.Draw(graphics, sprite);
+                    sprite.DrawString(gameFont, gameText, new Vector2(playing.GetScreenWH().X / 2 - 400, 40), Color.White);
+                    sprite.End();
                     break;
                 case E_Gamestates.GameOver:
+                    sprite.Begin();
                     gameEnd.Draw(graphics);
+                    sprite.DrawString(gameFont, gameText, new Vector2(playing.GetScreenWH().X / 2 - 500, playing.GetScreenWH().Y / 2), Color.Black);
+                    sprite.End();
                     break;
                 default : break;
 
@@ -79,11 +94,17 @@ namespace MonoGames_Practice_Classes.Scripts
         public void LoadContent(ContentManager cm, GraphicsDeviceManager graphics)
         {
             playing.LoadContent(cm, graphics);
+            gameFont = cm.Load<SpriteFont>("GameFont");
             graphics.PreferredBackBufferWidth = (int)playing.GetScreenWH().X;
             graphics.PreferredBackBufferHeight = (int)playing.GetScreenWH().Y;
             graphics.ApplyChanges();
             menu = new Menu(new Vector2(playing.GetScreenWH().X, playing.GetScreenWH().Y));
         }
-        
+
+        public void SetMessage(string message)
+        {
+            gameText = message;
+        }
+
     }
 }
