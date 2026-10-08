@@ -12,7 +12,6 @@ namespace MonoGames_Practice_Classes.Scripts
         Player player; //references the player script
         Enemy enemy; //references the enemy script
 
-        private int spriteChooser;
 
         public Play() //constructor that calls forth bought the enemy and player construcotrs and puts in their parameters
         {
