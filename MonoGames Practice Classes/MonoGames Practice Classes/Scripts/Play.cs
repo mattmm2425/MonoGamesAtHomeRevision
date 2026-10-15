@@ -18,10 +18,9 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public Play() //constructor that calls forth the enemy and player constructors and puts in their parameters
         {
-            player = new Player(new Vector2 (200, 500), 3);
-            enemy = new Enemy(new Vector2(100, 100));
             level = new Level();
-
+            player = new Player(new Vector2 (300, 500), 3, level, new Rectangle(0,0,52,72));
+            enemy = new Enemy(new Vector2(250, 100), level, new Rectangle(0,0,52,72));
         }
 
         public void LoadContent(ContentManager cm, GraphicsDeviceManager graphics) 

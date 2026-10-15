@@ -17,12 +17,16 @@ namespace MonoGames_Practice_Classes.Scripts
         protected Texture2D Sprite; //all characters need sprite so adding it in parent class saves time
         public int spriteSheetY { get; protected set; }
         protected int spriteSheetX;
+        public Level currentLevel;
+        public Rectangle spriteDimensions;
 
         //public constructor
-        public Creature(Vector2 startPos)
+        public Creature(Vector2 startPos, Level playLevel, Rectangle ParamSpriteDimensions)
         {
             startPosition = startPos;
             currentPosition = startPos;
+            currentLevel = playLevel;
+            spriteDimensions = ParamSpriteDimensions;
         }
 
         public void LoadContent(ContentManager cm, string spriteName) //function for loading a 2d Texture asset on a character, the asset is defined by the string variable spriteName
@@ -39,26 +43,38 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public virtual void Up(float speed) //moves character up by 1 unit on the Y axis
         {
-            currentPosition.Y -= speed;
-            spriteSheetY = 0;
+            if (!currentLevel.IsWall((int)currentPosition.X, (int)currentPosition.Y) &&
+                !currentLevel.IsWall((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y))
+            {
+                currentPosition.Y -= speed;
+            }
         }
 
         public virtual void Down(float speed) //moves character down by 1 unit on the Y axis
-        { 
-            currentPosition.Y += speed;
-            spriteSheetY = 0;
+        {
+            if (!currentLevel.IsWall((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height - 1) &&
+                !currentLevel.IsWall((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Width - 1))
+            {
+                currentPosition.Y += speed;
+            }
         }
 
         public virtual void Left(float speed) //moves character left by 1 unit on the X axis
         {
-            currentPosition.X -= speed;
-            spriteSheetY = 0;
+            if (!currentLevel.IsWall((int)currentPosition.X, (int)currentPosition.Y) &&
+                !currentLevel.IsWall((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height - 1))
+            {
+                currentPosition.X -= speed;
+            }
         }
 
         public virtual void Right(float speed) //moves character right by 1 unit on the X axis
         {
-            currentPosition.X += speed;
-            spriteSheetY = 0;
+            if (!currentLevel.IsWall((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height - 1) &&
+                !currentLevel.IsWall((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y))
+            {
+                currentPosition.X += speed;
+            }
         }
 
         public void ResetPosition() //resets character position to starting position

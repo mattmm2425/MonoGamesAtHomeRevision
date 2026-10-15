@@ -9,7 +9,7 @@ namespace MonoGames_Practice_Classes.Scripts
     internal class Enemy : Creature
     {
         private Vector2 playerPosition;
-        public Enemy(Vector2 startPos) : base(startPos)
+        public Enemy(Vector2 startPos, Level paramCurrentLevel, Rectangle rect) : base(startPos, paramCurrentLevel, rect)
         {
 
         }

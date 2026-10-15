@@ -12,10 +12,7 @@ namespace MonoGames_Practice_Classes.Scripts
         private int initialLives;
         private int score;
 
-        private float speed;
-        public int spriteChooser;
-
-        public Player(Vector2 startPos, int paramLives) : base(startPos) //constructor for the play class to use to create an instance of the player once playing has begun
+        public Player(Vector2 startPos, int paramLives, Level paramCurrentLevel, Rectangle rect) : base(startPos, paramCurrentLevel, rect) //constructor for the play class to use to create an instance of the player once playing has begun
         {
             initialLives = paramLives;
             lives = paramLives;     //using speed as an input parameter so can change speed from play script (getting comfortable with overriding and adding input parameters into constructors)

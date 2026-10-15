@@ -53,7 +53,7 @@ namespace MonoGames_Practice_Classes.Scripts
         }
 
         
-        public void BuildNewLevel()
+        private void BuildNewLevel()
         { 
             levelContent = File.ReadAllLines(@"..\Levels\Level " + currentLevel + ".txt");
             foreach (var line in levelContent)
@@ -79,6 +79,18 @@ namespace MonoGames_Practice_Classes.Scripts
                         spriteBatch.Draw(wallTexture, new Vector2(row * textureWH.X, column * textureWH.Y), Color.White);
                     }
                 }
+            }
+        }
+
+        public bool IsWall(int X, int Y)
+        {
+            if (levelContent[(int)(Y / textureWH.Y)][(int)(X / textureWH.X)] == 'W')
+            {
+                return true;
+            }
+            else 
+            {
+                return false;
             }
         }
     }
