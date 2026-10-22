@@ -2,9 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
-using SharpDX.Direct3D9;
-using System.Runtime.Intrinsics.X86;
-using System.Runtime.CompilerServices;
 
 namespace MonoGames_Practice_Classes.Scripts
 {
@@ -88,5 +85,24 @@ namespace MonoGames_Practice_Classes.Scripts
             return currentPosition;
         }
 
+        protected Vector2 GetSpriteFrameSize()
+        {
+            return new Vector2(spriteDimensions.Width, spriteDimensions.Height);
+        }
+
+        public bool CollidesWith(Creature creature)
+        {
+            if (currentPosition.X <= creature.GetCurrentPosition().X + creature.spriteDimensions.Width - 1 &&
+               currentPosition.X + spriteDimensions.Width - 1 >= creature.GetCurrentPosition().X &&
+               currentPosition.Y <= creature.GetCurrentPosition().Y + creature.spriteDimensions.Height - 1 &&
+               currentPosition.Y + spriteDimensions.Height - 1 >= creature.GetCurrentPosition().Y)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

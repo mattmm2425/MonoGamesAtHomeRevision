@@ -10,20 +10,33 @@ namespace MonoGames_Practice_Classes.Scripts
     internal class Level
     {
         private Texture2D wallTexture;
-        private Vector2 textureWH;
+        private Vector2 textureWH = new Vector2(128, 128);
         private string[] levelContent;
         private int currentLevel;
+        public Vector2 PlayerStart;
+        public Vector2 PlayerSpawn;
 
         public Level()
         {
             currentLevel = 1;
+            BuildNewLevel();
+            for (int column = 0; column < GetArrayHeight(); column++)
+            {
+                for (int row = 0; row < GetArrayWidth(); row++)
+                {
+                    if (levelContent[column][row] == 'P')
+                    {
+                        PlayerStart = new Vector2(row * textureWH.X, column * textureWH.Y);
+                        
+                    }
+                }
+            }
         }
 
         public void LoadContent(ContentManager cm, string filename)
         {
             wallTexture = cm.Load<Texture2D>(filename);
             textureWH = new Vector2(wallTexture.Width, wallTexture.Height);
-
             BuildNewLevel();
         }
 
@@ -78,6 +91,17 @@ namespace MonoGames_Practice_Classes.Scripts
                     {
                         spriteBatch.Draw(wallTexture, new Vector2(row * textureWH.X, column * textureWH.Y), Color.White);
                     }
+                    
+                    if (levelContent[column][row] == 'P')
+                    {
+                        PlayerPosition(column, row);
+                    }
+                    
+                    if (levelContent[column][row] == '.')
+                    {
+                        // empty space, do nothing
+                    }
+
                 }
             }
         }
@@ -92,6 +116,12 @@ namespace MonoGames_Practice_Classes.Scripts
             {
                 return false;
             }
+        }
+
+        public Vector2 PlayerPosition(int Y, int X)
+        { 
+            PlayerStart = new Vector2(X * textureWH.X, Y * textureWH.Y);
+            return PlayerStart;
         }
     }
 }

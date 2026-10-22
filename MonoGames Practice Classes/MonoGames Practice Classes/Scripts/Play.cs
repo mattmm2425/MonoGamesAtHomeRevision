@@ -14,12 +14,12 @@ namespace MonoGames_Practice_Classes.Scripts
         Player player; //references the player script
         Enemy enemy; //references the enemy script
 
-        private Level level;
+        Level level;
 
         public Play() //constructor that calls forth the enemy and player constructors and puts in their parameters
         {
             level = new Level();
-            player = new Player(new Vector2 (300, 500), 3, level, new Rectangle(0,0,52,72));
+            player = new Player(level.PlayerStart, 3, level, new Rectangle(0,0,52,72));
             enemy = new Enemy(new Vector2(250, 100), level, new Rectangle(0,0,52,72));
         }
 
@@ -50,7 +50,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 enemy.ResetPosition();
                 return E_Gamestates.Play;
             }
-            else if (enemy.Caught(player) == true && player.GetLives() <= 0) //if the player gets caught and they have no lives remaining then the player gets taken to the gameover screen
+            else if (enemy.CollidesWith(player) == true && player.GetLives() <= 0 || player.CollidesWith(enemy) == true && player.GetLives() <= 0) //if the player gets caught and they have no lives remaining then the player gets taken to the gameover screen
             {
                 enemy.ResetPosition();
                 player.ResetPosition();
@@ -58,7 +58,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 level.ResetLevels();
                 return E_Gamestates.GameOver;
             }
-            else if (enemy.Caught(player) == true && player.GetLives() > 0) //if the player gets caught and they do have lives remaining then they lose a life and both their locations get reset
+            else if (enemy.CollidesWith(player) == true && player.GetLives() > 0 || player.CollidesWith(enemy) == true && player.GetLives() > 0) //if the player gets caught and they do have lives remaining then they lose a life and both their locations get reset
             {
                 player.LoseLife();
                 player.ResetPosition();
