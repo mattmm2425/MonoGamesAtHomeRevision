@@ -14,23 +14,12 @@ namespace MonoGames_Practice_Classes.Scripts
         private string[] levelContent;
         private int currentLevel;
         public Vector2 PlayerStart;
-        public Vector2 PlayerSpawn;
 
         public Level()
         {
             currentLevel = 1;
             BuildNewLevel();
-            for (int column = 0; column < GetArrayHeight(); column++)
-            {
-                for (int row = 0; row < GetArrayWidth(); row++)
-                {
-                    if (levelContent[column][row] == 'P')
-                    {
-                        PlayerStart = new Vector2(row * textureWH.X, column * textureWH.Y);
-                        
-                    }
-                }
-            }
+
         }
 
         public void LoadContent(ContentManager cm, string filename)
@@ -72,6 +61,17 @@ namespace MonoGames_Practice_Classes.Scripts
             foreach (var line in levelContent)
             { 
                 Console.WriteLine(line);
+            }
+            for (int column = 0; column < GetArrayHeight(); column++)
+            {
+                for (int row = 0; row < GetArrayWidth(); row++)
+                {
+                    if (levelContent[column][row] == 'P')
+                    {
+                        PlayerPosition(column, row);
+
+                    }
+                }
             }
         }
         

@@ -13,7 +13,7 @@ namespace MonoGames_Practice_Classes.Scripts
         protected float rotation;
         protected Texture2D Sprite; //all characters need sprite so adding it in parent class saves time
         public int spriteSheetY { get; protected set; }
-        protected int spriteSheetX;
+        public int spriteSheetX { get; protected set; }
         public Level currentLevel;
         public Rectangle spriteDimensions;
 
@@ -104,5 +104,12 @@ namespace MonoGames_Practice_Classes.Scripts
                 return false;
             }
         }
+
+        public void NewSpawnPoint(Vector2 spawnPoint)
+        {
+            startPosition = spawnPoint;
+            currentPosition = spawnPoint;
+        }
+
     }
 }

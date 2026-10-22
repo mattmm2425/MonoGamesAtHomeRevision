@@ -36,7 +36,6 @@ namespace MonoGames_Practice_Classes.Scripts
         public void Draw(GraphicsDevice graphics)
         {
             graphics.Clear(Color.Crimson); //draws background of the menu screen
-        
         }
     }
 }

@@ -13,6 +13,7 @@ namespace MonoGames_Practice_Classes.Scripts
     {
         Player player; //references the player script
         Enemy enemy; //references the enemy script
+        HorizontalEnemy horizonEnemy;
 
         Level level;
 
@@ -20,13 +21,15 @@ namespace MonoGames_Practice_Classes.Scripts
         {
             level = new Level();
             player = new Player(level.PlayerStart, 3, level, new Rectangle(0,0,52,72));
-            enemy = new Enemy(new Vector2(250, 100), level, new Rectangle(0,0,52,72));
+            enemy = new Enemy(new Vector2(800, 100), level, new Rectangle(0,0,52,72));
+            horizonEnemy = new HorizontalEnemy(new Vector2(800, 200), level, new Rectangle(0,306,52,72));
         }
 
         public void LoadContent(ContentManager cm, GraphicsDeviceManager graphics) 
         {
             player.LoadContent(cm, "CharacterSprites"); //loads the sprite sheet of CharacterSprites onto the 2D texture asset
             enemy.LoadContent(cm, "OrcEnemySprites"); //loads the sprite sheet of the OrcEnemySprites onto the 2D texture asset
+            horizonEnemy.LoadContent(cm, "OrcEnemySprites");
             level.LoadContent(cm, "StoneWallTexture"); //loads the sprite sheet of the StoneWallTexture onto the 2D texture asset
         }
 
@@ -39,43 +42,50 @@ namespace MonoGames_Practice_Classes.Scripts
             else if (Keyboard.GetState().IsKeyDown(Keys.Enter) && level.GetCurrentLevel() < 2) //if the player presses Enter then the game will reset the player and enemy positions, reset the players lives and reset the level
             {
                 level.NextLevel();
-                player.ResetPosition();
-                enemy.ResetPosition();
+                resetPlayingLevel();
                 return E_Gamestates.Play;
             }
             else if (Keyboard.GetState().IsKeyDown(Keys.P) && level.GetCurrentLevel() > 1) //if the player presses P then the game will reset the player and enemy positions, reset the players lives and reset the level
             {
                 level.ResetLevels();
-                player.ResetPosition();
-                enemy.ResetPosition();
+                resetPlayingLevel();
                 return E_Gamestates.Play;
             }
-            else if (enemy.CollidesWith(player) == true && player.GetLives() <= 0 || player.CollidesWith(enemy) == true && player.GetLives() <= 0) //if the player gets caught and they have no lives remaining then the player gets taken to the gameover screen
-            {
-                enemy.ResetPosition();
-                player.ResetPosition();
-                player.ResetLives();
-                level.ResetLevels();
-                return E_Gamestates.GameOver;
-            }
-            else if (enemy.CollidesWith(player) == true && player.GetLives() > 0 || player.CollidesWith(enemy) == true && player.GetLives() > 0) //if the player gets caught and they do have lives remaining then they lose a life and both their locations get reset
+            else if (enemy.CollidesWith(player) == true || player.CollidesWith(enemy) == true) //if the player gets caught and they have no lives remaining then the player gets taken to the gameover screen
             {
                 player.LoseLife();
-                player.ResetPosition();
-                enemy.ResetPosition();
-                return E_Gamestates.Play; //user remains in the play state
+                resetPlayingLevel();
+                if (player.GetLives() <= 0)
+                {
+                    player.ResetLives();
+                    level.ResetLevels();
+                    return E_Gamestates.GameOver;
+                }
+                else
+                {
+                    return E_Gamestates.Play;
+                }
             }
             else //if the player hasn't been caught or pressed escape the else function will run
             {
 
                 PlayerMovement(4f); //calls movement function
                 enemy.Chase(player);    //calls enemy chase function and inputs new instance of the player so the enemy character knows who to chases
+                horizonEnemy.Chase(player);
                 Console.WriteLine("Player Lives: " + player.GetLives());
                 return E_Gamestates.Play;   //user continues in play state until conditions chase
             }
 
             
         }
+
+        private void resetPlayingLevel()
+        {
+            player.NewSpawnPoint(level.PlayerStart);
+            enemy.ResetPosition();
+            player.ResetPosition();
+        }
+
 
         public void Draw(GraphicsDevice graphics, SpriteBatch sprite)
         {
@@ -84,6 +94,7 @@ namespace MonoGames_Practice_Classes.Scripts
             level.Draw(sprite);
             player.Draw(sprite, new Rectangle(0, player.spriteSheetY, 52, 72));  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
             enemy.Draw(sprite, new Rectangle(0, enemy.spriteSheetY, 52, 72));
+            horizonEnemy.Draw(sprite, new Rectangle(horizonEnemy.spriteSheetX, horizonEnemy.spriteSheetY, 52, 72));
             //sprite.End();
         }
 
