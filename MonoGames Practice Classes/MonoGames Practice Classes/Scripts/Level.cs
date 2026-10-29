@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace MonoGames_Practice_Classes.Scripts
 {
@@ -13,8 +14,9 @@ namespace MonoGames_Practice_Classes.Scripts
         private Vector2 textureWH = new Vector2(128, 128);
         private string[] levelContent;
         private int currentLevel;
-        public Vector2 PlayerStart;
-
+        private Vector2 PlayerStart;
+        public int basicEnemyCount = 0;
+        public List<Vector2> basicEnemySpawns = new List<Vector2>();
         public Level()
         {
             currentLevel = 1;
@@ -51,6 +53,8 @@ namespace MonoGames_Practice_Classes.Scripts
         public void NextLevel()
         {
             currentLevel ++;
+            basicEnemyCount = 0;
+            basicEnemySpawns.Clear();
             BuildNewLevel();
         }
 
@@ -71,6 +75,12 @@ namespace MonoGames_Practice_Classes.Scripts
                         PlayerPosition(column, row);
 
                     }
+
+                    if (levelContent[column][row] == 'E')
+                    {
+                        basicEnemyCount++;
+                        basicEnemySpawns.Add(BasicEnemyPosition(column, row));
+                    }
                 }
             }
         }
@@ -78,6 +88,8 @@ namespace MonoGames_Practice_Classes.Scripts
         public void ResetLevels()
         { 
             currentLevel = 1;
+            basicEnemyCount = 0;
+            basicEnemySpawns.Clear();
             BuildNewLevel();
         }
         
@@ -118,10 +130,21 @@ namespace MonoGames_Practice_Classes.Scripts
             }
         }
 
-        public Vector2 PlayerPosition(int Y, int X)
+        private Vector2 PlayerPosition(int Y, int X)
         { 
             PlayerStart = new Vector2(X * textureWH.X, Y * textureWH.Y);
             return PlayerStart;
+        }
+
+        public Vector2 GetPlayerSpawn()
+        {
+            return PlayerStart;
+        }
+
+        private Vector2 BasicEnemyPosition(int Y, int X)
+        {
+            return new Vector2(X * textureWH.X, Y * textureWH.Y);
+           
         }
     }
 }

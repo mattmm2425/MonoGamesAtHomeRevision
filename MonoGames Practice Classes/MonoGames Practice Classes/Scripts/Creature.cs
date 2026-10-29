@@ -10,12 +10,12 @@ namespace MonoGames_Practice_Classes.Scripts
         //protected variables that only the child classes can inherit
         protected Vector2 currentPosition;
         protected Vector2 startPosition;
-        protected float rotation;
         protected Texture2D Sprite; //all characters need sprite so adding it in parent class saves time
         public int spriteSheetY { get; protected set; }
         public int spriteSheetX { get; protected set; }
         public Level currentLevel;
         public Rectangle spriteDimensions;
+        public bool isDead = false;
 
         //public constructor
         public Creature(Vector2 startPos, Level playLevel, Rectangle ParamSpriteDimensions)

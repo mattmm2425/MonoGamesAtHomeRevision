@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 using System.Drawing.Imaging.Effects;
 using System.IO;
 using System.Reflection;
@@ -16,19 +17,28 @@ namespace MonoGames_Practice_Classes.Scripts
         HorizontalEnemy horizonEnemy;
 
         Level level;
+        List<Enemy> enemies = new List<Enemy>();
 
         public Play() //constructor that calls forth the enemy and player constructors and puts in their parameters
         {
             level = new Level();
-            player = new Player(level.PlayerStart, 3, level, new Rectangle(0,0,52,72));
-            enemy = new Enemy(new Vector2(800, 100), level, new Rectangle(0,0,52,72));
+            player = new Player(level.GetPlayerSpawn(), 3, level, new Rectangle(0,0,52,72));
+            for (int i = 0; i < level.basicEnemyCount;)
+            {
+                enemies.Add(new Enemy(level.basicEnemySpawns[i], level, new Rectangle(0, 0, 52, 72)));
+                enemies[i].NewSpawnPoint(level.basicEnemySpawns[i]);
+                i++;
+            }
             horizonEnemy = new HorizontalEnemy(new Vector2(800, 200), level, new Rectangle(0,306,52,72));
         }
 
         public void LoadContent(ContentManager cm, GraphicsDeviceManager graphics) 
         {
             player.LoadContent(cm, "CharacterSprites"); //loads the sprite sheet of CharacterSprites onto the 2D texture asset
-            enemy.LoadContent(cm, "OrcEnemySprites"); //loads the sprite sheet of the OrcEnemySprites onto the 2D texture asset
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.LoadContent(cm, "OrcEnemySprites"); //loads the sprite sheet of the OrcEnemySprites onto the 2D texture asset
+            }
             horizonEnemy.LoadContent(cm, "OrcEnemySprites");
             level.LoadContent(cm, "StoneWallTexture"); //loads the sprite sheet of the StoneWallTexture onto the 2D texture asset
         }
@@ -39,50 +49,76 @@ namespace MonoGames_Practice_Classes.Scripts
             {
                 return E_Gamestates.Menu; //takes players back to the menu if they press the escape button
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Enter) && level.GetCurrentLevel() < 2) //if the player presses Enter then the game will reset the player and enemy positions, reset the players lives and reset the level
+            
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter) && level.GetCurrentLevel() < 2) //if the player presses Enter then the game will reset the player and enemy positions, reset the players lives and reset the level
             {
                 level.NextLevel();
                 resetPlayingLevel();
                 return E_Gamestates.Play;
             }
-            else if (Keyboard.GetState().IsKeyDown(Keys.P) && level.GetCurrentLevel() > 1) //if the player presses P then the game will reset the player and enemy positions, reset the players lives and reset the level
+            
+            if (Keyboard.GetState().IsKeyDown(Keys.P) && level.GetCurrentLevel() > 1) //if the player presses P then the game will reset the player and enemy positions, reset the players lives and reset the level
             {
                 level.ResetLevels();
                 resetPlayingLevel();
                 return E_Gamestates.Play;
             }
-            else if (enemy.CollidesWith(player) == true || player.CollidesWith(enemy) == true) //if the player gets caught and they have no lives remaining then the player gets taken to the gameover screen
+            
+            foreach (Enemy enemy in enemies)
             {
-                player.LoseLife();
-                resetPlayingLevel();
-                if (player.GetLives() <= 0)
+                if (enemy.CollidesWith(player) == true || player.CollidesWith(enemy) == true) //if the player gets caught and they have no lives remaining then the player gets taken to the gameover screen
                 {
-                    player.ResetLives();
-                    level.ResetLevels();
-                    return E_Gamestates.GameOver;
-                }
-                else
-                {
-                    return E_Gamestates.Play;
+                    player.LoseLife();
+                    resetPlayingLevel();
+                    if (player.GetLives() <= 0)
+                    {
+                        player.ResetLives();
+                        level.ResetLevels();
+                        return E_Gamestates.GameOver;
+                    }
+                    else
+                    {
+                        return E_Gamestates.Play;
+                    }
                 }
             }
-            else //if the player hasn't been caught or pressed escape the else function will run
-            {
+             //if the player hasn't been caught or pressed escape the else function will run
+            
 
-                PlayerMovement(4f); //calls movement function
+            PlayerMovement(4f); //calls movement function
+            foreach (Enemy enemy in enemies)
+            {
                 enemy.Chase(player);    //calls enemy chase function and inputs new instance of the player so the enemy character knows who to chases
-                horizonEnemy.Chase(player);
-                Console.WriteLine("Player Lives: " + player.GetLives());
-                return E_Gamestates.Play;   //user continues in play state until conditions chase
             }
+            horizonEnemy.Chase(player);
+            //Console.WriteLine("Player Lives: " + player.GetLives());
+            return E_Gamestates.Play;   //user continues in play state until conditions chase
+        
 
             
         }
 
         private void resetPlayingLevel()
         {
-            player.NewSpawnPoint(level.PlayerStart);
-            enemy.ResetPosition();
+            player.NewSpawnPoint(level.GetPlayerSpawn());
+            if (level.basicEnemyCount < (enemies.Count))
+            {
+                enemies.Remove(enemy);
+            }
+            for (int i = 0; i < level.basicEnemyCount;)
+            {
+                if (level.basicEnemyCount > (enemies.Count))
+                {
+                    enemies.Add(new Enemy(level.basicEnemySpawns[i], level, new Rectangle(0, 0, 52, 72)));
+                }
+                enemies[i].NewSpawnPoint(level.basicEnemySpawns[i]);
+                i++;
+            }
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.ResetPosition();
+            }
+            //enemies.Clear();
             player.ResetPosition();
         }
 
@@ -93,7 +129,10 @@ namespace MonoGames_Practice_Classes.Scripts
             //sprite.Begin();
             level.Draw(sprite);
             player.Draw(sprite, new Rectangle(0, player.spriteSheetY, 52, 72));  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
-            enemy.Draw(sprite, new Rectangle(0, enemy.spriteSheetY, 52, 72));
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.Draw(sprite, new Rectangle(0, enemy.spriteSheetY, 52, 72));
+            }
             horizonEnemy.Draw(sprite, new Rectangle(horizonEnemy.spriteSheetX, horizonEnemy.spriteSheetY, 52, 72));
             //sprite.End();
         }

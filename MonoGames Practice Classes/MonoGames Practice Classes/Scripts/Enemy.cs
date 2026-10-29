@@ -8,10 +8,9 @@ namespace MonoGames_Practice_Classes.Scripts
 {
     internal class Enemy : Creature
     {
-        private Vector2 playerPosition;
-
         public Enemy(Vector2 startPos, Level paramCurrentLevel, Rectangle rect) : base(startPos, paramCurrentLevel, rect)
-        { }
+        {
+        }
 
         public virtual void Chase(Player player)    //uses parents movement functions to chase the player around the level
         { 
@@ -39,20 +38,24 @@ namespace MonoGames_Practice_Classes.Scripts
                 spriteSheetY = 216;
             }
         }
-
-        
-
-       /* public bool Caught(Player player) //function to check if the player and enemy are sharing the same space, will be used in the play script to have consequences
+        public void LoadContent(ContentManager contentManager)
         {
-            if (player.GetCurrentPosition() == currentPosition)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }*/
+
+        }
+
+
+
+        /* public bool Caught(Player player) //function to check if the player and enemy are sharing the same space, will be used in the play script to have consequences
+         {
+             if (player.GetCurrentPosition() == currentPosition)
+             {
+                 return true;
+             }
+             else
+             {
+                 return false;
+             }
+         }*/
 
     }
 }

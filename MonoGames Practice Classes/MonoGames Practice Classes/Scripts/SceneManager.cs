@@ -55,7 +55,7 @@ namespace MonoGames_Practice_Classes.Scripts
         }
 
         //graphics is used to clear colour
-        public void Draw(GraphicsDevice graphics, SpriteBatch sprite)
+        public virtual void Draw(GraphicsDevice graphics, SpriteBatch sprite)
         {
             switch (e_scene)
             {

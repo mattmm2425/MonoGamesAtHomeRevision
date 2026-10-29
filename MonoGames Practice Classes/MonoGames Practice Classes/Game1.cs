@@ -9,8 +9,8 @@ namespace MonoGames_Practice_Classes
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        public GraphicsDeviceManager _graphics;
+        public SpriteBatch _spriteBatch;
 
         private SceneManager scene;
 

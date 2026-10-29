@@ -9,8 +9,6 @@ namespace MonoGames_Practice_Classes.Scripts
     {
         private double timeLimit;
         private double totalTime;
-        Player player;
-
         public GameOver()
         {
             
@@ -22,7 +20,6 @@ namespace MonoGames_Practice_Classes.Scripts
         public E_Gamestates Update(double deltaTime)
         {
             totalTime += deltaTime;
-            Debug.Write(deltaTime);
 
             if (totalTime >= timeLimit)
             {
