@@ -17,6 +17,7 @@ namespace MonoGames_Practice_Classes.Scripts
         HorizontalEnemy horizonEnemy;
 
         Level level;
+        private Texture2D enemySprite;
         List<Enemy> enemies = new List<Enemy>();
 
         public Play() //constructor that calls forth the enemy and player constructors and puts in their parameters
@@ -38,6 +39,7 @@ namespace MonoGames_Practice_Classes.Scripts
             foreach (Enemy enemy in enemies)
             {
                 enemy.LoadContent(cm, "OrcEnemySprites"); //loads the sprite sheet of the OrcEnemySprites onto the 2D texture asset
+                enemySprite = enemy.Sprite;
             }
             horizonEnemy.LoadContent(cm, "OrcEnemySprites");
             level.LoadContent(cm, "StoneWallTexture"); //loads the sprite sheet of the StoneWallTexture onto the 2D texture asset
@@ -101,24 +103,26 @@ namespace MonoGames_Practice_Classes.Scripts
         private void resetPlayingLevel()
         {
             player.NewSpawnPoint(level.GetPlayerSpawn());
-            if (level.basicEnemyCount < (enemies.Count))
-            {
-                enemies.Remove(enemy);
-            }
+            //if (level.basicEnemyCount < (enemies.Count))
+            //{
+            //enemies.Remove(this.enemy);
+            //}
+            enemies.Clear();
             for (int i = 0; i < level.basicEnemyCount;)
             {
                 if (level.basicEnemyCount > (enemies.Count))
                 {
                     enemies.Add(new Enemy(level.basicEnemySpawns[i], level, new Rectangle(0, 0, 52, 72)));
+                    
                 }
                 enemies[i].NewSpawnPoint(level.basicEnemySpawns[i]);
                 i++;
             }
             foreach (Enemy enemy in enemies)
             {
+                enemy.Sprite = enemySprite;
                 enemy.ResetPosition();
             }
-            //enemies.Clear();
             player.ResetPosition();
         }
 

@@ -10,7 +10,7 @@ namespace MonoGames_Practice_Classes.Scripts
         //protected variables that only the child classes can inherit
         protected Vector2 currentPosition;
         protected Vector2 startPosition;
-        protected Texture2D Sprite; //all characters need sprite so adding it in parent class saves time
+        public Texture2D Sprite; //all characters need sprite so adding it in parent class saves time
         public int spriteSheetY { get; protected set; }
         public int spriteSheetX { get; protected set; }
         public Level currentLevel;
