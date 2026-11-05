@@ -20,6 +20,8 @@ namespace MonoGames_Practice_Classes.Scripts
         private Texture2D enemySprite;
         List<Enemy> enemies = new List<Enemy>();
 
+        private bool JumpIsPressed;
+
         public Play() //constructor that calls forth the enemy and player constructors and puts in their parameters
         {
             level = new Level();
@@ -31,6 +33,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 i++;
             }
             horizonEnemy = new HorizontalEnemy(new Vector2(800, 200), level, new Rectangle(0,306,52,72));
+            JumpIsPressed = false;
         }
 
         public void LoadContent(ContentManager cm, GraphicsDeviceManager graphics) 
@@ -42,7 +45,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 enemySprite = enemy.Sprite;
             }
             horizonEnemy.LoadContent(cm, "OrcEnemySprites");
-            level.LoadContent(cm, "StoneWallTexture"); //loads the sprite sheet of the StoneWallTexture onto the 2D texture asset
+            level.LoadContent(cm, "StoneWallTexture", "Platform"); //loads the sprite sheet of the StoneWallTexture onto the 2D texture asset
         }
 
         public E_Gamestates Update()
@@ -84,10 +87,10 @@ namespace MonoGames_Practice_Classes.Scripts
                     }
                 }
             }
-             //if the player hasn't been caught or pressed escape the else function will run
-            
+            //if the player hasn't been caught or pressed escape the else function will run
 
-            PlayerMovement(4f); //calls movement function
+            player.JumpOrFall();
+            PlayerMovement(); //calls movement function
             foreach (Enemy enemy in enemies)
             {
                 enemy.Chase(player);    //calls enemy chase function and inputs new instance of the player so the enemy character knows who to chases
@@ -146,28 +149,38 @@ namespace MonoGames_Practice_Classes.Scripts
             return level.GetLevelSize(); //returns the level size to the scene manager so it can be used to set the game window size
         }
 
-        private void PlayerMovement(float speed)    //player movement function that takes in an input of speed
+        private void PlayerMovement()    //player movement function that takes in an input of speed
         {
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
-                player.Right(speed);
+                player.Right();
             } 
 
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                player.Left(speed);
+                player.Left();
             }
 
             
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                player.Up(speed);
+                if (!JumpIsPressed)
+                {
+                    JumpIsPressed = true;
+                    player.SetIsJumping();
+                }
+                //player.Up(speed);
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
+            if (Keyboard.GetState().IsKeyUp(Keys.W))
+            {
+                JumpIsPressed = false;
+            }
+
+            /*if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
                 player.Down(speed);
-            }
+            }*/
         }
         
         public int GetLevel()

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
+using System;
 
 namespace MonoGames_Practice_Classes.Scripts
 {
@@ -16,6 +17,11 @@ namespace MonoGames_Practice_Classes.Scripts
         public Level currentLevel;
         public Rectangle spriteDimensions;
         public bool isDead = false;
+        protected bool isJumping;
+        protected int maxHeight;
+        protected int currentHeight;
+        protected float Speed = 3f;
+        protected float FallSpeed = 3f;
 
         //public constructor
         public Creature(Vector2 startPos, Level playLevel, Rectangle ParamSpriteDimensions)
@@ -24,6 +30,9 @@ namespace MonoGames_Practice_Classes.Scripts
             currentPosition = startPos;
             currentLevel = playLevel;
             spriteDimensions = ParamSpriteDimensions;
+            isJumping = false;
+            maxHeight = 170;
+            currentHeight = 0;
         }
 
         public void LoadContent(ContentManager cm, string spriteName) //function for loading a 2d Texture asset on a character, the asset is defined by the string variable spriteName
@@ -43,34 +52,63 @@ namespace MonoGames_Practice_Classes.Scripts
             if (!currentLevel.IsWall((int)currentPosition.X, (int)currentPosition.Y) &&
                 !currentLevel.IsWall((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y))
             {
-                currentPosition.Y -= speed;
+                currentPosition.Y = currentPosition.Y - (speed*2.5f);
+                currentHeight += (int)(speed * 2);
+            }
+            else
+            {
+                if (isJumping)
+                isJumping = false;
             }
         }
 
         public virtual void Down(float speed) //moves character down by 1 unit on the Y axis
         {
+            bool OnFloor;
+            bool OnPlatform;
+            bool SameRow;
+
+            OnFloor = currentLevel.IsWallOrPlatform((int)currentPosition.X,
+                (int)currentPosition.Y + (spriteDimensions.Height - 1) + (int)Speed, "Wall") ||
+                currentLevel.IsWallOrPlatform((int)currentPosition.X + (spriteDimensions.Width - 1),
+                (int)currentPosition.Y + (spriteDimensions.Height - 1) + (int)Speed, "Wall");
+
+            OnPlatform = currentLevel.IsWallOrPlatform((int)currentPosition.X,
+                (int)currentPosition.Y + (spriteDimensions.Height - 1) + (int)Speed, "Platform") ||
+                currentLevel.IsWallOrPlatform((int)currentPosition.X + (spriteDimensions.Width - 1),
+                (int)currentPosition.Y + (spriteDimensions.Height - 1) + (int)Speed, "Platform");
+
+            SameRow = currentLevel.IsInSameRow((int)currentPosition.Y + spriteDimensions.Height - 1,
+                (int)currentPosition.Y + spriteDimensions.Height - 1 + (int)Speed);
+
+            if (!OnFloor && !(OnPlatform && !SameRow))
+            {
+                currentPosition.Y += FallSpeed;
+            }
+
+            /*
             if (!currentLevel.IsWall((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height - 1) &&
                 !currentLevel.IsWall((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Width - 1))
             {
                 currentPosition.Y += speed;
-            }
+            }*/
         }
 
-        public virtual void Left(float speed) //moves character left by 1 unit on the X axis
+        public virtual void Left() //moves character left by 1 unit on the X axis
         {
             if (!currentLevel.IsWall((int)currentPosition.X, (int)currentPosition.Y) &&
                 !currentLevel.IsWall((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height - 1))
             {
-                currentPosition.X -= speed;
+                currentPosition.X -= Speed;
             }
         }
 
-        public virtual void Right(float speed) //moves character right by 1 unit on the X axis
+        public virtual void Right() //moves character right by 1 unit on the X axis
         {
             if (!currentLevel.IsWall((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height - 1) &&
                 !currentLevel.IsWall((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y))
             {
-                currentPosition.X += speed;
+                currentPosition.X += Speed;
             }
         }
 
@@ -111,5 +149,49 @@ namespace MonoGames_Practice_Classes.Scripts
             currentPosition = spawnPoint;
         }
 
+        public void SetIsJumping()
+        {
+            bool OnFloor;
+            bool OnPlatform;
+            bool SameRow;
+
+            OnFloor = currentLevel.IsWallOrPlatform((int)currentPosition.X,
+                (int)currentPosition.Y + (spriteDimensions.Height - 1) + (int)Speed, "Wall") ||
+                currentLevel.IsWallOrPlatform((int)currentPosition.X + (spriteDimensions.Width - 1),
+                (int)currentPosition.Y + (spriteDimensions.Height - 1) + (int)Speed, "Wall");
+
+            OnPlatform = currentLevel.IsWallOrPlatform((int)currentPosition.X,
+                (int)currentPosition.Y + (spriteDimensions.Height - 1) + (int)Speed, "Platform") ||
+                currentLevel.IsWallOrPlatform((int)currentPosition.X + (spriteDimensions.Width - 1),
+                (int)currentPosition.Y + (spriteDimensions.Height - 1) + (int)Speed, "Platform");
+
+            SameRow = currentLevel.IsInSameRow((int)currentPosition.Y + (spriteDimensions.Height - 1),
+                (int)currentPosition.Y + (spriteDimensions.Height - 1) + (int)Speed);
+
+            Console.WriteLine("{0}, {1}, {2}, {3}", OnFloor, OnPlatform, SameRow, isJumping);
+
+            if (OnFloor || (OnPlatform && !SameRow))
+            {
+                isJumping = true;
+                currentHeight = 0;
+            }
+        }
+        public void JumpOrFall()
+        {
+            if (isJumping)
+            {
+                Up(Speed);
+            }
+
+            if (currentHeight >= maxHeight)
+            {
+                isJumping = false;
+                Down(FallSpeed);
+            }
+            else
+            {
+                Down(FallSpeed);
+            }
+        }
     }
 }

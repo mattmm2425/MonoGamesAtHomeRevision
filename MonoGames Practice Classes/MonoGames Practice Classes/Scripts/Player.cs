@@ -31,15 +31,15 @@ namespace MonoGames_Practice_Classes.Scripts
             spriteSheetY = 0;
         }
 
-        public override void Left(float speed)  //overriding left movement function and changing the speed of the player
+        public override void Left()  //overriding left movement function and changing the speed of the player
         {
-            base.Left(speed);
+            base.Left();
             spriteSheetY = 72;
         }
 
-        public override void Right(float speed) //overriding right movement function and changing the speed of the player
+        public override void Right() //overriding right movement function and changing the speed of the player
         {
-            base.Right(speed);
+            base.Right();
             spriteSheetY = 144;
         }
 

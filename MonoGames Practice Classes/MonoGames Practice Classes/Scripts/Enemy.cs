@@ -8,33 +8,36 @@ namespace MonoGames_Practice_Classes.Scripts
 {
     internal class Enemy : Creature
     {
+
         public Enemy(Vector2 startPos, Level paramCurrentLevel, Rectangle rect) : base(startPos, paramCurrentLevel, rect)
         {
+            Speed = 1.0f;
+            FallSpeed = 1.0f;
         }
 
         public virtual void Chase(Player player)    //uses parents movement functions to chase the player around the level
         { 
             if (player.GetCurrentPosition().X > currentPosition.X)
             {
-                Right(1);
+                Right();
                 spriteSheetY = 144;
             }
             
             if (player.GetCurrentPosition().X < currentPosition.X)
             {
-                Left(1);
+                Left();
                 spriteSheetY = 72;
             }
             // two seperate if statements to allow this enemy to chase the player character to in both the x and y direction
             if (player.GetCurrentPosition().Y > currentPosition.Y)
             {
-                Down(1);
+                Down(FallSpeed);
                 spriteSheetY = 0;
             }
 
             if (player.GetCurrentPosition().Y < currentPosition.Y)
             {
-                Up(1);
+                Up(FallSpeed);
                 spriteSheetY = 216;
             }
         }

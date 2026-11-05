@@ -17,13 +17,13 @@ namespace MonoGames_Practice_Classes.Scripts
         {
             if (player.GetCurrentPosition().X > currentPosition.X)
             {
-                Right(2.0f);
+                Right();
                 spriteSheetY = 72 * 2;
                 spriteSheetX = 52 * 6;
             }
             else if (player.GetCurrentPosition().X < currentPosition.X)
             {
-                Left(2.0f);
+                Left();
                 spriteSheetY = 72;
                 spriteSheetX = 52 * 6;
             }
