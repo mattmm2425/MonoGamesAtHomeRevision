@@ -17,7 +17,6 @@ namespace MonoGames_Practice_Classes.Scripts
         private int currentLevel;
         private Vector2 PlayerStart;
         private Texture2D platformTexture;
-        //private Vector2 platTextureWH;
         public int basicEnemyCount = 0;
         public List<Vector2> basicEnemySpawns = new List<Vector2>();
         public Level()
@@ -32,7 +31,6 @@ namespace MonoGames_Practice_Classes.Scripts
             wallTexture = cm.Load<Texture2D>(wallFilename);
             platformTexture = cm.Load<Texture2D>(platformFilename);
             textureWH = new Vector2(wallTexture.Width, wallTexture.Height);
-            //platTextureWH = new Vector2(platformTexture.Width, platformTexture.Height);
             BuildNewLevel();
         }
 
@@ -111,7 +109,7 @@ namespace MonoGames_Practice_Classes.Scripts
 
                     if (levelContent[column][row] == 'p')
                     { 
-                        spriteBatch.Draw(platformTexture, new Vector2(row * textureWH.X, column * textureWH.Y), Color.White);
+                        spriteBatch.Draw(platformTexture, new Vector2(row * textureWH.X, column * textureWH.Y /*- (platformTexture.Height / 2)*/), Color.White);
                     }
                     
                     if (levelContent[column][row] == 'P')
@@ -134,7 +132,11 @@ namespace MonoGames_Practice_Classes.Scripts
             {
                 return true;
             }
-            else if (type == "Platform" && levelContent[(int)(Y / (textureWH.Y)/2)][(int)(X / textureWH.X)] == 'p')
+            else if (type == "Platform" && levelContent[(int)(Y / textureWH.Y)][(int)(X / textureWH.X)] == 'p')
+            {
+                return true;
+            }
+            else if (type == "Both" && (levelContent[(int)(Y / textureWH.Y)][(int)(X / textureWH.X)] == 'W' || levelContent[(int)(Y / textureWH.Y)][(int)(X / textureWH.X)] == 'p'))
             {
                 return true;
             }

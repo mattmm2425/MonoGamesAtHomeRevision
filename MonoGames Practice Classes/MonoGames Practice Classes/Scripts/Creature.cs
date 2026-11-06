@@ -49,10 +49,16 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public virtual void Up(float speed) //moves character up by 1 unit on the Y axis
         {
-            if (!currentLevel.IsWall((int)currentPosition.X, (int)currentPosition.Y) &&
-                !currentLevel.IsWall((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y))
+            if (!currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Both") &&
+                !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Both"))
             {
                 currentPosition.Y = currentPosition.Y - (speed*2.5f);
+                currentHeight += (int)(speed * 2);
+            }
+            else if (!currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + 64, "Platform") && isJumping ||
+                !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + 64, "Platform") && isJumping)
+            {
+                currentPosition.Y = currentPosition.Y - (speed * 2.5f);
                 currentHeight += (int)(speed * 2);
             }
             else
@@ -96,8 +102,13 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public virtual void Left() //moves character left by 1 unit on the X axis
         {
-            if (!currentLevel.IsWall((int)currentPosition.X, (int)currentPosition.Y) &&
-                !currentLevel.IsWall((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height - 1))
+            if (!currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Both") &&
+                !currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height - 1, "Both"))
+            {
+                currentPosition.X -= Speed;
+            }
+            else if (currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Platform") &&
+                !currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height - 10, "Wall"))
             {
                 currentPosition.X -= Speed;
             }
@@ -105,8 +116,13 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public virtual void Right() //moves character right by 1 unit on the X axis
         {
-            if (!currentLevel.IsWall((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height - 1) &&
-                !currentLevel.IsWall((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y))
+            if (!currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height - 1, "Both") &&
+                !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Both"))
+            {
+                currentPosition.X += Speed;
+            }
+            else if(currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height + 10, "Wall") &&
+                currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Platform"))
             {
                 currentPosition.X += Speed;
             }
