@@ -14,6 +14,8 @@ namespace MonoGames_Practice_Classes.Scripts
         public Texture2D Sprite; //all characters need sprite so adding it in parent class saves time
         public int spriteSheetY { get; protected set; }
         public int spriteSheetX { get; protected set; }
+        protected bool isFacingRight;
+
         public Level currentLevel;
         public Rectangle spriteDimensions;
         public bool isDead = false;
@@ -24,7 +26,7 @@ namespace MonoGames_Practice_Classes.Scripts
         protected float FallSpeed = 3f;
 
         //public constructor
-        public Creature(Vector2 startPos, Level playLevel, Rectangle ParamSpriteDimensions)
+        public Creature(Vector2 startPos, Level playLevel, Rectangle ParamSpriteDimensions) //creature constructor, sets all the most important variables in player and enemy child classes
         {
             startPosition = startPos;
             currentPosition = startPos;
@@ -44,6 +46,10 @@ namespace MonoGames_Practice_Classes.Scripts
         public void Draw(SpriteBatch spriteBatch, Rectangle rect) //function that all characters will use to draw their correct sprite from their sprite sheet
         {
             spriteBatch.Draw(Sprite, currentPosition, rect, Color.White);
+            if (!isFacingRight)
+            {
+                spriteBatch.Draw(Sprite, currentPosition, rect, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
+            }
         }
 
 
@@ -52,11 +58,16 @@ namespace MonoGames_Practice_Classes.Scripts
             if (!currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Both") &&
                 !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Both"))
             {
-                currentPosition.Y = currentPosition.Y - (speed*2.5f);
+                currentPosition.Y = currentPosition.Y - (speed * 2.5f);
                 currentHeight += (int)(speed * 2);
             }
-            else if (!currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + 64, "Platform") && isJumping ||
-                !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + 64, "Platform") && isJumping)
+            else if (currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Wall") ||
+                    currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Wall"))
+            {
+                isJumping = false;
+            }
+            else if (!currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + 64, "Platform") && isJumping &&
+                    !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + 64, "Platform") && isJumping)
             {
                 currentPosition.Y = currentPosition.Y - (speed * 2.5f);
                 currentHeight += (int)(speed * 2);

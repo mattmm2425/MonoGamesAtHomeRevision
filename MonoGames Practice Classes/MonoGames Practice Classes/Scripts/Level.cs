@@ -145,7 +145,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 return false;
             }
         }
-
+        /*  old movement bool used to check if the player can move from a top right persepective
         public bool IsWall(int X, int Y)
         {
             if (levelContent[(int)(Y / textureWH.Y)][(int)(X / textureWH.X)] == 'W')
@@ -157,7 +157,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 return false;
             }
         }
-
+        */
         public bool IsInSameRow(int Y1, int Y2)
         { 
             int first = Y1 / (int)textureWH.Y;
