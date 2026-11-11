@@ -24,6 +24,7 @@ namespace MonoGames_Practice_Classes.Scripts
         protected int currentHeight;
         protected float Speed = 3f;
         protected float FallSpeed = 3f;
+        protected int maxFrameIndex;
 
         public enum Animations
         {   
@@ -34,7 +35,7 @@ namespace MonoGames_Practice_Classes.Scripts
             LookUp = 4
         }
 
-        private int FrameIndex = 0;
+        protected int FrameIndex = 0;
         private double currentFrameTime = 0;
         private double frameTimeLimit = 0;
         public Animations e_currentAnimation;
@@ -61,7 +62,7 @@ namespace MonoGames_Practice_Classes.Scripts
 
         }
 
-        public void Draw(SpriteBatch spriteBatch) //function that all characters will use to draw their correct sprite from their sprite sheet
+        public virtual void Draw(SpriteBatch spriteBatch) //function that all characters will use to draw their correct sprite from their sprite sheet
         {
             switch (e_currentAnimation)
             { 
@@ -272,7 +273,7 @@ namespace MonoGames_Practice_Classes.Scripts
             {
                 FrameIndex++;
                 currentFrameTime = 0;
-                if (FrameIndex >= 2)
+                if (FrameIndex >= maxFrameIndex)
                 {
                     FrameIndex = 0;
                 }

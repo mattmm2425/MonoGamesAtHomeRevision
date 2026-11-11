@@ -25,7 +25,7 @@ namespace MonoGames_Practice_Classes.Scripts
         public Play() //constructor that calls forth the enemy and player constructors and puts in their parameters
         {
             level = new Level();
-            player = new Player(level.GetPlayerSpawn(), 3, level, new Rectangle(0,0,52,72));
+            player = new Player(level.GetPlayerSpawn(), 3, level, new Rectangle(0,0,32,32));
             for (int i = 0; i < level.basicEnemyCount;)
             {
                 enemies.Add(new Enemy(level.basicEnemySpawns[i], level, new Rectangle(0, 0, 52, 72)));
@@ -38,7 +38,7 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public void LoadContent(ContentManager cm, GraphicsDeviceManager graphics) 
         {
-            player.LoadContent(cm, "CharacterSprites"); //loads the sprite sheet of CharacterSprites onto the 2D texture asset
+            player.LoadContent(cm, "atlas"); //loads the sprite sheet of CharacterSprites onto the 2D texture asset
             foreach (Enemy enemy in enemies)
             {
                 enemy.LoadContent(cm, "OrcEnemySprites"); //loads the sprite sheet of the OrcEnemySprites onto the 2D texture asset
@@ -180,6 +180,12 @@ namespace MonoGames_Practice_Classes.Scripts
             if (Keyboard.GetState().IsKeyUp(Keys.W))
             {
                 JumpIsPressed = false;
+            }
+
+            if (Keyboard.GetState().IsKeyUp(Keys.D) && Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.W))
+            {
+                player.SetIdleFrames();
+                player.SetAnimation(Creature.Animations.Idle);
             }
 
             /*if (Keyboard.GetState().IsKeyDown(Keys.S))

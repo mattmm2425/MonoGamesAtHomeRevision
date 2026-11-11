@@ -20,20 +20,51 @@ namespace MonoGames_Practice_Classes.Scripts
             e_currentAnimation = Animations.Idle;
         }
 
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            switch (e_currentAnimation)
+            {
+                case Animations.Idle:
+                    spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 0, spriteDimensions.Width, spriteDimensions.Height), Color.White);
+                    spriteSheetY = 0;
+                    break;
+                case Animations.Walk:
+                    if (isFacingRight)
+                    {
+                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 32, spriteDimensions.Width, spriteDimensions.Height), Color.White);
+                    }
+                    else if (!isFacingRight)
+                    {
+                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 32, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
+                    }
+                    spriteSheetY = 144;
+                    break;
+                case Animations.Jump:
+                    spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 160, spriteDimensions.Width, spriteDimensions.Height), Color.White);
+                    spriteSheetY = 216;
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public override void Up(float speed)    //overriding up movement function and changing the speed of the player
         {
+            maxFrameIndex = 0;
             base.Up(speed);
             spriteSheetY = 216;
         }
 
         public override void Down(float speed)
         {
+            maxFrameIndex = 0;
             base.Down(speed);
             spriteSheetY = 0;
         }
 
         public override void Left()  //overriding left movement function and changing the speed of the player
         {
+            maxFrameIndex = 5;
             base.Left();
             spriteSheetY = 144;
             isFacingRight = false;
@@ -41,6 +72,7 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public override void Right() //overriding right movement function and changing the speed of the player
         {
+            maxFrameIndex = 5;
             base.Right();
             isFacingRight = true;
             spriteSheetY = 144;
@@ -60,7 +92,11 @@ namespace MonoGames_Practice_Classes.Scripts
         {
             lives = initialLives;
         }
-        
+
+        public void SetIdleFrames()
+        {
+            maxFrameIndex = 3;
+        }
 
     }
 }
