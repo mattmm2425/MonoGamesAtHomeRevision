@@ -17,6 +17,7 @@ namespace MonoGames_Practice_Classes.Scripts
             initialLives = paramLives;
             lives = paramLives;     //using speed as an input parameter so can change speed from play script (getting comfortable with overriding and adding input parameters into constructors)
             score = 0;
+            e_currentAnimation = Animations.Idle;
         }
 
         public override void Up(float speed)    //overriding up movement function and changing the speed of the player

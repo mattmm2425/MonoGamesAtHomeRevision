@@ -19,12 +19,16 @@ namespace MonoGames_Practice_Classes.Scripts
         { 
             if (player.GetCurrentPosition().X > currentPosition.X)
             {
+                e_currentAnimation = Animations.Walk;
+                isFacingRight = true;
                 Right();
                 spriteSheetY = 144;
             }
             
             if (player.GetCurrentPosition().X < currentPosition.X)
             {
+                e_currentAnimation = Animations.Walk;
+                isFacingRight = false;
                 Left();
                 spriteSheetY = 72;
             }
@@ -37,6 +41,7 @@ namespace MonoGames_Practice_Classes.Scripts
 
             if (player.GetCurrentPosition().Y < currentPosition.Y)
             {
+                e_currentAnimation = Animations.Jump;
                 Up(FallSpeed);
                 spriteSheetY = 216;
             }

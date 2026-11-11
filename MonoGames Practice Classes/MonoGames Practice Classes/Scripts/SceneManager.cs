@@ -42,7 +42,7 @@ namespace MonoGames_Practice_Classes.Scripts
                     SetMessage("Press Left Click to Start");
                     break;
                 case E_Gamestates.Play:
-                    SwitchState(playing.Update());
+                    SwitchState(playing.Update(deltaTime));
                     SetMessage("Level: " + playing.GetLevel());
                     break;
                 case E_Gamestates.GameOver:

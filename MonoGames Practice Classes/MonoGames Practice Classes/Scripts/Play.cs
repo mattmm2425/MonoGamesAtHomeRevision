@@ -48,7 +48,7 @@ namespace MonoGames_Practice_Classes.Scripts
             level.LoadContent(cm, "StoneWallTexture", "Platform"); //loads the sprite sheet of the StoneWallTexture onto the 2D texture asset
         }
 
-        public E_Gamestates Update()
+        public E_Gamestates Update(double DeltaTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
@@ -90,12 +90,14 @@ namespace MonoGames_Practice_Classes.Scripts
             //if the player hasn't been caught or pressed escape the else function will run
 
             player.JumpOrFall();
-            PlayerMovement(); //calls movement function
+            PlayerMovement(DeltaTime); //calls movement function
             foreach (Enemy enemy in enemies)
             {
                 enemy.Chase(player);    //calls enemy chase function and inputs new instance of the player so the enemy character knows who to chases
+                enemy.UpdateAnimation(DeltaTime); //updates the animation of the enemy based on the current state
             }
             horizonEnemy.Chase(player);
+            horizonEnemy.UpdateAnimation(DeltaTime);
             //Console.WriteLine("Player Lives: " + player.GetLives());
             return E_Gamestates.Play;   //user continues in play state until conditions chase
         
@@ -135,12 +137,12 @@ namespace MonoGames_Practice_Classes.Scripts
             graphics.Clear(Color.CornflowerBlue);   //sets background of the playing state
             //sprite.Begin();
             level.Draw(sprite);
-            player.Draw(sprite, new Rectangle(0, player.spriteSheetY, 52, 72));  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
+            player.Draw(sprite);  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
             foreach (Enemy enemy in enemies)
             {
-                enemy.Draw(sprite, new Rectangle(0, enemy.spriteSheetY, 52, 72));
+                enemy.Draw(sprite);
             }
-            horizonEnemy.Draw(sprite, new Rectangle(horizonEnemy.spriteSheetX, horizonEnemy.spriteSheetY, 52, 72));
+            horizonEnemy.Draw(sprite);
             //sprite.End();
         }
 
@@ -149,15 +151,17 @@ namespace MonoGames_Practice_Classes.Scripts
             return level.GetLevelSize(); //returns the level size to the scene manager so it can be used to set the game window size
         }
 
-        private void PlayerMovement()    //player movement function that takes in an input of speed
+        private void PlayerMovement(double deltaTime)    //player movement function that takes in an input of speed
         {
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
+                player.SetAnimation(Creature.Animations.Walk);
                 player.Right();
             } 
 
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
+                player.SetAnimation(Creature.Animations.Walk);
                 player.Left();
             }
 
@@ -168,6 +172,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 {
                     JumpIsPressed = true;
                     player.SetIsJumping();
+                    player.SetAnimation(Creature.Animations.Jump);  
                 }
                 //player.Up(speed);
             }
@@ -181,6 +186,9 @@ namespace MonoGames_Practice_Classes.Scripts
             {
                 player.Down(speed);
             }*/
+
+            player.UpdateAnimation(deltaTime); //updates the animation of the player based on the current state
+
         }
         
         public int GetLevel()

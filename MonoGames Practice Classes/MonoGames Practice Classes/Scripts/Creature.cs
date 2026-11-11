@@ -25,6 +25,20 @@ namespace MonoGames_Practice_Classes.Scripts
         protected float Speed = 3f;
         protected float FallSpeed = 3f;
 
+        public enum Animations
+        {   
+            Idle = 0,
+            Walk = 1,
+            Jump = 2,
+            Fall = 3,
+            LookUp = 4
+        }
+
+        private int FrameIndex = 0;
+        private double currentFrameTime = 0;
+        private double frameTimeLimit = 0;
+        public Animations e_currentAnimation;
+
         //public constructor
         public Creature(Vector2 startPos, Level playLevel, Rectangle ParamSpriteDimensions) //creature constructor, sets all the most important variables in player and enemy child classes
         {
@@ -35,6 +49,10 @@ namespace MonoGames_Practice_Classes.Scripts
             isJumping = false;
             maxHeight = 170;
             currentHeight = 0;
+            FrameIndex = 0;
+            currentFrameTime = 0;
+            frameTimeLimit = 0.2;
+            e_currentAnimation = Animations.Idle;
         }
 
         public void LoadContent(ContentManager cm, string spriteName) //function for loading a 2d Texture asset on a character, the asset is defined by the string variable spriteName
@@ -43,12 +61,28 @@ namespace MonoGames_Practice_Classes.Scripts
 
         }
 
-        public void Draw(SpriteBatch spriteBatch, Rectangle rect) //function that all characters will use to draw their correct sprite from their sprite sheet
+        public void Draw(SpriteBatch spriteBatch) //function that all characters will use to draw their correct sprite from their sprite sheet
         {
-            spriteBatch.Draw(Sprite, currentPosition, rect, Color.White);
-            if (!isFacingRight)
-            {
-                spriteBatch.Draw(Sprite, currentPosition, rect, Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
+            switch (e_currentAnimation)
+            { 
+                case Animations.Idle:
+                    spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 0, spriteDimensions.Width, spriteDimensions.Height), Color.White);
+                    spriteSheetY = 0;
+                    break;
+                case Animations.Walk: 
+                    spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 144, spriteDimensions.Width, spriteDimensions.Height), Color.White);
+                    if (!isFacingRight)
+                    {
+                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 144, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
+                    }
+                    spriteSheetY = 144; 
+                    break;
+                case Animations.Jump:
+                    spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 216, spriteDimensions.Width, spriteDimensions.Height), Color.White);
+                    spriteSheetY = 216; 
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -218,6 +252,30 @@ namespace MonoGames_Practice_Classes.Scripts
             else
             {
                 Down(FallSpeed);
+            }
+        }
+
+        public void SetAnimation(Animations animation)
+        {
+            if (e_currentAnimation != animation)
+            {
+                e_currentAnimation = animation;
+                FrameIndex = 0;
+                currentFrameTime = 0;
+            }
+        }
+
+        public void UpdateAnimation(Double deltaTime)
+        {
+            currentFrameTime += deltaTime;
+            if (currentFrameTime >= frameTimeLimit)
+            {
+                FrameIndex++;
+                currentFrameTime = 0;
+                if (FrameIndex >= 2)
+                {
+                    FrameIndex = 0;
+                }
             }
         }
     }
