@@ -9,24 +9,27 @@ namespace MonoGames_Practice_Classes.Scripts
     internal class Creature
     {
         //protected variables that only the child classes can inherit
-        protected Vector2 currentPosition;
-        protected Vector2 startPosition;
+        protected Vector2 currentPosition;  //used for the current position of the creatures in the level, used for the draw method to draw the creature at the correct position in the level
+        protected Vector2 startPosition;    //used to store the starting position of the creature in the level, used for resetting the creature back to its starting position when the player dies
+
         public Texture2D Sprite; //all characters need sprite so adding it in parent class saves time
-        protected Vector2 spriteSheet;
-        protected bool isFacingRight;
+        protected Vector2 spriteSheet;  //used to store the location of the sprite in the sprite sheet for the creatures, used for the draw method to draw the correct sprite for the creature
+        protected bool isFacingRight;   //used to store the direction the creature is facing, used for the draw method to draw the correct sprite for the creature, flips the creature depending on the bool value, means a secondary animation state doesn't have to be used.
 
-        public Level currentLevel;
-        public Rectangle spriteDimensions;
-        public bool isDead = false;
-        protected bool isJumping;
-        protected bool isFalling;
-        protected int maxHeight;
-        protected int currentHeight;
-        protected float Speed = 3f;
-        protected float FallSpeed = 3f;
-        protected int maxFrameIndex;
-
-        public enum Animations
+        public Level currentLevel;  //used to store the current level the creature is in, used for the draw method to draw the correct sprite for the creature, and for the movement methods to check for collisions with the level
+        public Rectangle spriteDimensions;  //used to store the dimensions of the sprite for the creature, used for the draw method to draw the correct sprite for the creature, and for the movement methods to check for collisions with the level
+        
+        public bool isDead = false; //used to store the state of the creature, used for the draw method to draw the correct sprite for the creature, and for the movement methods to check for collisions with the level
+        protected bool isJumping;   //used for the state of the creature, used for the draw method as well as the movement methods
+        protected bool isFalling;   //used for the state of the creature, used for the draw method as well as the movement methods
+        
+        protected int maxHeight;    //used for the jump method, once the player reaches the max height the player will start to fall
+        protected int currentHeight;    //used for the jump method, checks if the player has reached the max height
+        protected float Speed = 3f; //used for the movement methods
+        
+        protected float FallSpeed = 3f; //used for the down movement method
+        protected int maxFrameIndex;    //used for the animation method, checks if the player has reached the max frame index, made it a variable because different animations will have different amount of frames in them.
+        public enum Animations  //enum to store different animation states, used for the draw method
         {
             Idle = 0,
             Walk = 1,
@@ -35,10 +38,10 @@ namespace MonoGames_Practice_Classes.Scripts
             LookUp = 4
         }
 
-        protected int FrameIndex = 0;
-        private double currentFrameTime = 0;
-        private double frameTimeLimit = 0;
-        public Animations e_currentAnimation;
+        protected int FrameIndex = 0;   //current animation frame, used for the animation method
+        private double currentFrameTime = 0;    //used for the animation method, checks if the player has reached the max frame time
+        private double frameTimeLimit = 0;  //used for the animation method, checks if the player has reached the max frame time
+        public Animations e_currentAnimation;   //used for the draw method, checks what the current animation state is, used to draw the correct sprite for the creature
 
         //public constructor
         public Creature(Vector2 startPos, Level playLevel, Rectangle ParamSpriteDimensions) //creature constructor, sets all the most important variables in player and enemy child classes
@@ -90,37 +93,37 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public virtual void Up(float speed) //moves character up by 1 unit on the Y axis
         {
-            if (!currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Both") &&
-                !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Both"))
+            if (!currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Both") &&   //checks if the top left corner of the character is not collidning with a wall or platform AND
+                !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Both"))    //checks if the top right corner of the character is not colliding with a wall or platform
             {
-                currentPosition.Y = currentPosition.Y - (speed * 2.5f);
-                currentHeight += (int)(speed * 2);
+                currentPosition.Y = currentPosition.Y - (speed * 2.5f); //if both checks are false then the player jumps 
+                currentHeight += (int)(speed * 2);  //adds value to the current height so it can be checked against max height to limit player jump height
             }
-            else if (currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Wall") ||
-                    currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Wall"))
+            else if (currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Wall") ||  //checks to see if the top right corner of the player is colliding with a wall OR
+                    currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Wall"))  //checks to see if the top left corner of the player is colliding with a wall 
             {
-                isJumping = false;
+                isJumping = false;  //if either check is false then the jumping is cancelled and the player is no longer jumping
             }
-            else if (!currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + 64, "Platform") && isJumping &&
-                    !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + 64, "Platform") && isJumping)
+            else if (!currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + 64, "Platform") && isJumping &&    //checks to see if the midpoint of the character is not colliding with a platform on the left side AND  
+                    !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + 64, "Platform") && isJumping)  //checks to see if the midpoint of the character is not colliding with a platform on the right side 
             {
-                currentPosition.Y = currentPosition.Y - (speed * 2.5f);
-                currentHeight += (int)(speed * 2);
+                currentPosition.Y = currentPosition.Y - (speed * 2.5f); //if both checks are false then the player jumps until the midpoint of the sprite hits the platform. The checks see if the mid point of the character is colliding because of how the checks registers platforms in level. This allows the players to reach the bottom of the platform rather than stopping short of it.
+                currentHeight += (int)(speed * 2);  //adds value to the current height so it can be checked against max height to limit player jump height
             }
-            else
+            else //otherwise the player is not jumping and falls
             {
                 if (isJumping)
                     isJumping = false;
             }
         }
 
-        public virtual void Down(float speed) //moves character down by 1 unit on the Y axis
+        public virtual void Down(float speed) //moves character down by the Speed value on the Y axis
         {
             bool OnFloor;
             bool OnPlatform;
             bool SameRow;
 
-            OnFloor = currentLevel.IsWallOrPlatform((int)currentPosition.X,
+            OnFloor = currentLevel.IsWallOrPlatform((int)currentPosition.X, 
                 (int)currentPosition.Y + (spriteDimensions.Height - 1) + (int)Speed, "Wall") ||
                 currentLevel.IsWallOrPlatform((int)currentPosition.X + (spriteDimensions.Width - 1),
                 (int)currentPosition.Y + (spriteDimensions.Height - 1) + (int)Speed, "Wall");
@@ -133,7 +136,7 @@ namespace MonoGames_Practice_Classes.Scripts
             SameRow = currentLevel.IsInSameRow((int)currentPosition.Y + spriteDimensions.Height - 1,
                 (int)currentPosition.Y + spriteDimensions.Height - 1 + (int)Speed);
 
-            if (!OnFloor && !(OnPlatform && !SameRow))
+            if (!OnFloor && !(OnPlatform && !SameRow))  //checks to see if the player can fall or if they are already on the floor or on a platform
             {
                 currentPosition.Y += FallSpeed;
                 isFalling = true;
@@ -153,29 +156,29 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public virtual void Left() //moves character left by 1 unit on the X axis
         {
-            if (!currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Both") &&
-                !currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height - 1, "Both"))
+            if (!currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Both") &&   //checks if the top left corner of the character is not colliding with a wall or platform AND
+                !currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height - 1, "Both"))   //checks if the bottom left corner of the character is not colliding with a wall or platform
             {
-                currentPosition.X -= Speed;
+                currentPosition.X -= Speed; //move character left by using speed
             }
-            else if (currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Platform") &&
-                currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height + 10, "Wall"))
+            else if (currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Platform") ||   //checks if the top left corner of the character is colliding with a platform OR
+                currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height + 10, "Platform"))   //checks if the bottom left corner of the character is colliding with a platform    //if either of these are true, the character is allowed to move left to move underneath platforms on the same row as the player.
             {
-                currentPosition.X -= Speed;
+                currentPosition.X -= Speed; //move character left by using speed
             }
         }
 
         public virtual void Right() //moves character right by 1 unit on the X axis
         {
-            if (!currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height - 1, "Both") &&
-                !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Both"))
+            if (!currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height - 1, "Both") &&    //checks if the character is not colliding on the bottom right corner with a wall or platform AND
+                !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Both"))    //checks if the character is not colliding on the top right corner with a wall or platform
             {
-                currentPosition.X += Speed;
+                currentPosition.X += Speed; //moves character to the right by using speed
             }
-            else if (currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height + 10, "Wall") &&
-                currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Platform"))
-            {
-                currentPosition.X += Speed;
+            else if (currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width + 1, (int)currentPosition.Y + spriteDimensions.Height + 10, "Platform") ||   //checks if the character is collding on the bottom right corner with a platform OR
+                currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Platform")) //checks if the character is colliding on the top right corner with a platform      //if either of these are true, the character is allowed to move right to move underneath platforms on the same row as the player.
+            {   //
+                currentPosition.X += Speed; //moves character to the right by using speed
             }
         }
 
@@ -190,12 +193,12 @@ namespace MonoGames_Practice_Classes.Scripts
             return currentPosition;
         }
 
-        protected Vector2 GetSpriteFrameSize()
+        protected Vector2 GetSpriteFrameSize()  //gets the size of the sprite frame
         {
             return new Vector2(spriteDimensions.Width, spriteDimensions.Height);
         }
 
-        public bool CollidesWith(Creature creature)
+        public bool CollidesWith(Creature creature) //checks if the character collides with another creature
         {
             if (currentPosition.X <= creature.GetCurrentPosition().X + creature.spriteDimensions.Width - 1 &&
                currentPosition.X + spriteDimensions.Width - 1 >= creature.GetCurrentPosition().X &&
@@ -210,13 +213,13 @@ namespace MonoGames_Practice_Classes.Scripts
             }
         }
 
-        public void NewSpawnPoint(Vector2 spawnPoint)
+        public void NewSpawnPoint(Vector2 spawnPoint)   //Sets a new spawn point for the character
         {
             startPosition = spawnPoint;
             currentPosition = spawnPoint;
         }
 
-        public void SetIsJumping()
+        public void SetIsJumping()  //Sets the isJumping variable to true or false, depending on if they character is on a floor OR on a platform AND not in the same row
         {
             bool OnFloor;
             bool OnPlatform;
@@ -243,7 +246,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 currentHeight = 0;
             }
         }
-        public void JumpOrFall()
+        public void JumpOrFall()    //checks to see conditions to make the player fall or jump
         {
             if (isJumping)
             {
@@ -261,7 +264,7 @@ namespace MonoGames_Practice_Classes.Scripts
             }
         }
 
-        public void SetAnimation(Animations animation)
+        public void SetAnimation(Animations animation)  //changes the animation state to match whatever the creture child class is outputting to match animations to inputs.
         {
             if (e_currentAnimation != animation)
             {
@@ -271,7 +274,7 @@ namespace MonoGames_Practice_Classes.Scripts
             }
         }
 
-        public void UpdateAnimation(Double deltaTime)
+        public void UpdateAnimation(Double deltaTime) //Updates animations by using the sprite sheet to make the sprite animated.
         {
             currentFrameTime += deltaTime;
             if (currentFrameTime >= frameTimeLimit)
@@ -285,12 +288,12 @@ namespace MonoGames_Practice_Classes.Scripts
             }
         }
 
-        public bool GetIsJumping()
+        public bool GetIsJumping()  //bool for seeing if the player is jumping, used for animations
         {
             return isJumping;
         }
 
-        public bool GetIsFalling()
+        public bool GetIsFalling()  //bool for seeing if the player is falling, used for animations
         {
             return isFalling;
         }
