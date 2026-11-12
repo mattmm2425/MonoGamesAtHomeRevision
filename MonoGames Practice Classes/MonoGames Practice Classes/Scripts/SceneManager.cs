@@ -21,7 +21,7 @@ namespace MonoGames_Practice_Classes.Scripts
         Play playing;
         GameOver gameEnd;
 
-        private SpriteFont gameFont;
+        protected SpriteFont gameFont;
         private string gameText;
 
         public SceneManager()
@@ -36,7 +36,7 @@ namespace MonoGames_Practice_Classes.Scripts
             double deltaTime = time.ElapsedGameTime.TotalSeconds;
 
             switch (e_scene)
-            { 
+            {
                 case E_Gamestates.Menu:
                     SwitchState(menu.Update(game));
                     SetMessage("Press Left Click to Start");
@@ -59,7 +59,7 @@ namespace MonoGames_Practice_Classes.Scripts
         {
             switch (e_scene)
             {
-                
+
                 case E_Gamestates.Menu:
                     sprite.Begin();
                     menu.Draw(graphics);
@@ -78,10 +78,10 @@ namespace MonoGames_Practice_Classes.Scripts
                     sprite.DrawString(gameFont, gameText, new Vector2(playing.GetScreenWH().X / 2 - 500, playing.GetScreenWH().Y / 2), Color.Black);
                     sprite.End();
                     break;
-                default : break;
+                default: break;
 
             }
-            
+
         }
 
         //method for reading current state
@@ -90,7 +90,7 @@ namespace MonoGames_Practice_Classes.Scripts
             e_scene = state;
         }
 
-        
+
         public void LoadContent(ContentManager cm, GraphicsDeviceManager graphics)
         {
             playing.LoadContent(cm, graphics);
@@ -101,10 +101,14 @@ namespace MonoGames_Practice_Classes.Scripts
             menu = new Menu(new Vector2(playing.GetScreenWH().X, playing.GetScreenWH().Y));
         }
 
-        public void SetMessage(string message)
+        private void SetMessage(string message)
         {
             gameText = message;
         }
 
+        private void SetLivesMessage(string message)
+        {
+            gameText = message;
+        }
     }
 }

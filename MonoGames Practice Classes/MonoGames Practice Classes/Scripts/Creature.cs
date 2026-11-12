@@ -20,6 +20,7 @@ namespace MonoGames_Practice_Classes.Scripts
         public Rectangle spriteDimensions;
         public bool isDead = false;
         protected bool isJumping;
+        protected bool isFalling;
         protected int maxHeight;
         protected int currentHeight;
         protected float Speed = 3f;
@@ -27,7 +28,7 @@ namespace MonoGames_Practice_Classes.Scripts
         protected int maxFrameIndex;
 
         public enum Animations
-        {   
+        {
             Idle = 0,
             Walk = 1,
             Jump = 2,
@@ -52,7 +53,7 @@ namespace MonoGames_Practice_Classes.Scripts
             currentHeight = 0;
             FrameIndex = 0;
             currentFrameTime = 0;
-            frameTimeLimit = 0.2;
+            frameTimeLimit = 0.15;
             e_currentAnimation = Animations.Idle;
         }
 
@@ -65,22 +66,22 @@ namespace MonoGames_Practice_Classes.Scripts
         public virtual void Draw(SpriteBatch spriteBatch) //function that all characters will use to draw their correct sprite from their sprite sheet
         {
             switch (e_currentAnimation)
-            { 
+            {
                 case Animations.Idle:
                     spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 0, spriteDimensions.Width, spriteDimensions.Height), Color.White);
                     spriteSheetY = 0;
                     break;
-                case Animations.Walk: 
+                case Animations.Walk:
                     spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 144, spriteDimensions.Width, spriteDimensions.Height), Color.White);
                     if (!isFacingRight)
                     {
                         spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 144, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
                     }
-                    spriteSheetY = 144; 
+                    spriteSheetY = 144;
                     break;
                 case Animations.Jump:
                     spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 216, spriteDimensions.Width, spriteDimensions.Height), Color.White);
-                    spriteSheetY = 216; 
+                    spriteSheetY = 216;
                     break;
                 default:
                     break;
@@ -110,7 +111,7 @@ namespace MonoGames_Practice_Classes.Scripts
             else
             {
                 if (isJumping)
-                isJumping = false;
+                    isJumping = false;
             }
         }
 
@@ -136,6 +137,11 @@ namespace MonoGames_Practice_Classes.Scripts
             if (!OnFloor && !(OnPlatform && !SameRow))
             {
                 currentPosition.Y += FallSpeed;
+                isFalling = true;
+            }
+            else
+            {
+                isFalling = false;
             }
 
             /*
@@ -167,7 +173,7 @@ namespace MonoGames_Practice_Classes.Scripts
             {
                 currentPosition.X += Speed;
             }
-            else if(currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height + 10, "Wall") &&
+            else if (currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height + 10, "Wall") &&
                 currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Platform"))
             {
                 currentPosition.X += Speed;
@@ -279,5 +285,16 @@ namespace MonoGames_Practice_Classes.Scripts
                 }
             }
         }
+
+        public bool GetIsJumping()
+        {
+            return isJumping;
+        }
+
+        public bool GetIsFalling()
+        {
+            return isFalling;
+        }
+
     }
 }

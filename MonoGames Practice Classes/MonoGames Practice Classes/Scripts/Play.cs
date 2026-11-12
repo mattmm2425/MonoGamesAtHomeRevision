@@ -21,6 +21,7 @@ namespace MonoGames_Practice_Classes.Scripts
         List<Enemy> enemies = new List<Enemy>();
 
         private bool JumpIsPressed;
+        private string LivesText;
 
         public Play() //constructor that calls forth the enemy and player constructors and puts in their parameters
         {
@@ -50,6 +51,8 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public E_Gamestates Update(double DeltaTime)
         {
+            LivesText = "Lives: " + player.GetLives();
+
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 return E_Gamestates.Menu; //takes players back to the menu if they press the escape button
@@ -155,14 +158,36 @@ namespace MonoGames_Practice_Classes.Scripts
         {
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
-                player.SetAnimation(Creature.Animations.Walk);
                 player.Right();
+                if (player.GetIsJumping() == true)
+                {
+                    player.SetAnimation(Creature.Animations.Jump);
+                }
+                else if (player.GetIsFalling() == true)
+                {
+                    player.SetAnimation(Creature.Animations.Fall);
+                }
+                else
+                {
+                    player.SetAnimation(Creature.Animations.Walk);
+                }
             } 
 
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                player.SetAnimation(Creature.Animations.Walk);
                 player.Left();
+                if (player.GetIsJumping() == true)
+                {
+                    player.SetAnimation(Creature.Animations.Jump);
+                }
+                else if (player.GetIsFalling() == true)
+                {
+                    player.SetAnimation(Creature.Animations.Fall);
+                }
+                else if (player.GetIsFalling() == false && player.GetIsJumping() == false)
+                {
+                    player.SetAnimation(Creature.Animations.Walk);
+                }
             }
 
             
@@ -184,8 +209,19 @@ namespace MonoGames_Practice_Classes.Scripts
 
             if (Keyboard.GetState().IsKeyUp(Keys.D) && Keyboard.GetState().IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyUp(Keys.W))
             {
-                player.SetIdleFrames();
-                player.SetAnimation(Creature.Animations.Idle);
+                if (player.GetIsJumping() == true)
+                {
+                    player.SetAnimation(Creature.Animations.Jump);
+                }
+                else if (player.GetIsFalling() == true)
+                {
+                    player.SetAnimation(Creature.Animations.Fall);
+                }
+                else
+                {
+                    player.SetIdleFrames();
+                    player.SetAnimation(Creature.Animations.Idle);
+                }
             }
 
             /*if (Keyboard.GetState().IsKeyDown(Keys.S))
@@ -202,5 +238,9 @@ namespace MonoGames_Practice_Classes.Scripts
             return level.GetCurrentLevel();
         }
 
+        public int GetLives()
+        {
+            return player.GetLives();
+        }
     }
 }
