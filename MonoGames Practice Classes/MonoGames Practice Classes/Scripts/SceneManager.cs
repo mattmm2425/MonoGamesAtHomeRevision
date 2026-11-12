@@ -21,14 +21,16 @@ namespace MonoGames_Practice_Classes.Scripts
         Play playing;
         GameOver gameEnd;
 
-        protected SpriteFont gameFont;
-        private string gameText;
+        //protected SpriteFont gameFont;
+        //private string gameText;
+        private HUD gameHUD;
 
         public SceneManager()
         {
             e_scene = E_Gamestates.Menu;
             playing = new Play();
             gameEnd = new GameOver();
+            gameHUD = new HUD();
         }
 
         public void Update(Game1 game, GameTime time)
@@ -39,15 +41,14 @@ namespace MonoGames_Practice_Classes.Scripts
             {
                 case E_Gamestates.Menu:
                     SwitchState(menu.Update(game));
-                    SetMessage("Press Left Click to Start");
+                    gameHUD.SetMessage("Start Game");
                     break;
                 case E_Gamestates.Play:
                     SwitchState(playing.Update(deltaTime));
-                    SetMessage("Level: " + playing.GetLevel());
                     break;
                 case E_Gamestates.GameOver:
                     SwitchState(gameEnd.Update(deltaTime));
-                    SetMessage("Game Over!");
+                    gameHUD.SetMessage("GameOver");
                     break;
                 default: break;
             }
@@ -63,19 +64,21 @@ namespace MonoGames_Practice_Classes.Scripts
                 case E_Gamestates.Menu:
                     sprite.Begin();
                     menu.Draw(graphics);
-                    sprite.DrawString(gameFont, gameText, new Vector2(playing.GetScreenWH().X / 2 - 500, playing.GetScreenWH().Y / 2), Color.White);
+                    gameHUD.DrawString(sprite, new Vector2(playing.GetScreenWH().X / 2 - 120, playing.GetScreenWH().Y / 2 - 200), Color.White);
+                    //sprite.DrawString(gameFont, gameText, new Vector2(playing.GetScreenWH().X / 2 - 500, playing.GetScreenWH().Y / 2), Color.White);
                     sprite.End();
                     break;
                 case E_Gamestates.Play:
                     sprite.Begin();
                     playing.Draw(graphics, sprite);
-                    sprite.DrawString(gameFont, gameText, new Vector2(playing.GetScreenWH().X / 2 - 400, 40), Color.White);
+                    //sprite.DrawString(gameFont, gameText, new Vector2(playing.GetScreenWH().X / 2 - 400, 40), Color.White);
                     sprite.End();
                     break;
                 case E_Gamestates.GameOver:
                     sprite.Begin();
                     gameEnd.Draw(graphics);
-                    sprite.DrawString(gameFont, gameText, new Vector2(playing.GetScreenWH().X / 2 - 500, playing.GetScreenWH().Y / 2), Color.Black);
+                    gameHUD.DrawString(sprite, new Vector2(playing.GetScreenWH().X / 2 - 120, playing.GetScreenWH().Y / 2), Color.Black);
+                    //sprite.DrawString(gameFont, gameText, new Vector2(playing.GetScreenWH().X / 2 - 500, playing.GetScreenWH().Y / 2), Color.Black);
                     sprite.End();
                     break;
                 default: break;
@@ -94,21 +97,12 @@ namespace MonoGames_Practice_Classes.Scripts
         public void LoadContent(ContentManager cm, GraphicsDeviceManager graphics)
         {
             playing.LoadContent(cm, graphics);
-            gameFont = cm.Load<SpriteFont>("GameFont");
+            gameHUD.LoadContent(cm);
             graphics.PreferredBackBufferWidth = (int)playing.GetScreenWH().X;
             graphics.PreferredBackBufferHeight = (int)playing.GetScreenWH().Y;
             graphics.ApplyChanges();
             menu = new Menu(new Vector2(playing.GetScreenWH().X, playing.GetScreenWH().Y));
         }
 
-        private void SetMessage(string message)
-        {
-            gameText = message;
-        }
-
-        private void SetLivesMessage(string message)
-        {
-            gameText = message;
-        }
     }
 }
