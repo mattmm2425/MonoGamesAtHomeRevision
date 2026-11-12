@@ -70,7 +70,7 @@ namespace MonoGames_Practice_Classes.Scripts
                     break;
                 case E_Gamestates.Play:
                     sprite.Begin();
-                    playing.Draw(graphics, sprite);
+                    playing.Draw(graphics, sprite, gameHUD);
                     //sprite.DrawString(gameFont, gameText, new Vector2(playing.GetScreenWH().X / 2 - 400, 40), Color.White);
                     sprite.End();
                     break;

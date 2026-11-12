@@ -31,7 +31,7 @@ namespace MonoGames_Practice_Classes.Scripts
             for (int i = 0; i < lives; i++)
             { 
                 sprite.Draw(HeartIcon,
-                    new Vector2(position.X + LevelTextFont.MeasureString(LevelMessage).X + lives + HeartIcon.Width, position.Y),
+                    new Vector2(position.X + (i * HeartIcon.Width), position.Y),
                     new Rectangle(0, 0, HeartIcon.Width, HeartIcon.Height), Color.White);
             }
         }

@@ -100,6 +100,11 @@ namespace MonoGames_Practice_Classes.Scripts
             return lives;
         }
 
+        public int GetScore()
+        { 
+            return score;
+        }
+
         public void LoseLife()
         {
             lives--;

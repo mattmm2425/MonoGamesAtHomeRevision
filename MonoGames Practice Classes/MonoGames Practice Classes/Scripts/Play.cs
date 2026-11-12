@@ -153,7 +153,7 @@ namespace MonoGames_Practice_Classes.Scripts
         }
 
 
-        public void Draw(GraphicsDevice graphics, SpriteBatch sprite)
+        public void Draw(GraphicsDevice graphics, SpriteBatch sprite, HUD gameHUD)
         {
             graphics.Clear(Color.CornflowerBlue);   //sets background of the playing state
             //sprite.Begin();
@@ -164,6 +164,12 @@ namespace MonoGames_Practice_Classes.Scripts
                 enemy.Draw(sprite);
             }
             horizonEnemy.Draw(sprite);
+
+            gameHUD.SetMessage("Level: " + level.GetCurrentLevel());
+            gameHUD.DrawString(sprite, new Vector2(GetScreenWH().X - 200, 10), Color.Black);
+            gameHUD.DrawLives(sprite, new Vector2(20, 20), player.GetLives());
+            gameHUD.SetMessage("Score: " + player.GetScore());
+            gameHUD.DrawString(sprite, new Vector2(GetScreenWH().X / 2, 20), Color.Black);
             //sprite.End();
         }
 
@@ -251,14 +257,6 @@ namespace MonoGames_Practice_Classes.Scripts
 
         }
         
-        public int GetLevel()
-        {
-            return level.GetCurrentLevel();
-        }
 
-        public int GetLives()
-        {
-            return player.GetLives();
-        }
     }
 }
