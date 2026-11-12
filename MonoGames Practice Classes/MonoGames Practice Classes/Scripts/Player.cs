@@ -33,7 +33,6 @@ namespace MonoGames_Practice_Classes.Scripts
                     {
                         spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 0, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
                     }
-                    spriteSheetY = 0;
                     break;
                 case Animations.Walk:
                     if (isFacingRight)
@@ -44,7 +43,6 @@ namespace MonoGames_Practice_Classes.Scripts
                     {
                         spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 64, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
                     }
-                    spriteSheetY = 144;
                     break;
                 case Animations.Jump:
                     if (isFacingRight)
@@ -55,7 +53,6 @@ namespace MonoGames_Practice_Classes.Scripts
                     {
                         spriteBatch.Draw(Sprite, currentPosition, new Rectangle(0, 320, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
                     }
-                    spriteSheetY = 216;
                     break;
                 case Animations.Fall:
                     if (isFacingRight)
@@ -66,7 +63,6 @@ namespace MonoGames_Practice_Classes.Scripts
                     {
                         spriteBatch.Draw(Sprite, currentPosition, new Rectangle(64, 320, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
                     }
-                    spriteSheetY = 216;
                     break;
                 default:
                     break;
@@ -77,21 +73,18 @@ namespace MonoGames_Practice_Classes.Scripts
         {
             maxFrameIndex = 0;
             base.Up(speed);
-            spriteSheetY = 216;
         }
 
         public override void Down(float speed)
         {
             maxFrameIndex = 0;
             base.Down(speed);
-            spriteSheetY = 0;
         }
 
         public override void Left()  //overriding left movement function and changing the speed of the player
         {
             maxFrameIndex = 5;
             base.Left();
-            spriteSheetY = 144;
             isFacingRight = false;
         }
 
@@ -100,7 +93,6 @@ namespace MonoGames_Practice_Classes.Scripts
             maxFrameIndex = 5;
             base.Right();
             isFacingRight = true;
-            spriteSheetY = 144;
         }
 
         public int GetLives()

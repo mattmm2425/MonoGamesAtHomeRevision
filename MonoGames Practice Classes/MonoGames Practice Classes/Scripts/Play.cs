@@ -90,8 +90,25 @@ namespace MonoGames_Practice_Classes.Scripts
                     }
                 }
             }
-            //if the player hasn't been caught or pressed escape the else function will run
+            //if the player hasn't been caught or pressed escape this code will run and the player will be able to move around the level and the enemies will chase the player
 
+            if (horizonEnemy.CollidesWith(player) == true || player.CollidesWith(horizonEnemy) == true) //if the player gets caught and they have no lives remaining then the player gets taken to the gameover screen
+            {
+                player.LoseLife();
+                resetPlayingLevel();
+                if (player.GetLives() <= 0)
+                {
+                    player.ResetLives();
+                    level.ResetLevels();
+                    return E_Gamestates.GameOver;
+                }
+                else
+                {
+                    return E_Gamestates.Play;
+                }
+            }
+
+            horizonEnemy.JumpOrFall();
             player.JumpOrFall();
             PlayerMovement(DeltaTime); //calls movement function
             foreach (Enemy enemy in enemies)
@@ -131,6 +148,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 enemy.Sprite = enemySprite;
                 enemy.ResetPosition();
             }
+            horizonEnemy.NewSpawnPoint(new Vector2(800, 200));
             player.ResetPosition();
         }
 

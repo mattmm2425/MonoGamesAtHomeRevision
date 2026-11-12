@@ -22,7 +22,6 @@ namespace MonoGames_Practice_Classes.Scripts
                 e_currentAnimation = Animations.Walk;
                 isFacingRight = true;
                 Right();
-                spriteSheetY = 144;
             }
             
             if (player.GetCurrentPosition().X < currentPosition.X)
@@ -30,27 +29,19 @@ namespace MonoGames_Practice_Classes.Scripts
                 e_currentAnimation = Animations.Walk;
                 isFacingRight = false;
                 Left();
-                spriteSheetY = 72;
             }
             // two seperate if statements to allow this enemy to chase the player character to in both the x and y direction
             if (player.GetCurrentPosition().Y > currentPosition.Y)
             {
                 Down(FallSpeed);
-                spriteSheetY = 0;
             }
 
             if (player.GetCurrentPosition().Y < currentPosition.Y)
             {
                 e_currentAnimation = Animations.Jump;
                 Up(FallSpeed);
-                spriteSheetY = 216;
             }
         }
-        public void LoadContent(ContentManager contentManager)
-        {
-
-        }
-
 
 
         /* public bool Caught(Player player) //function to check if the player and enemy are sharing the same space, will be used in the play script to have consequences

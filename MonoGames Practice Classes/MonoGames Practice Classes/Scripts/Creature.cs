@@ -12,8 +12,7 @@ namespace MonoGames_Practice_Classes.Scripts
         protected Vector2 currentPosition;
         protected Vector2 startPosition;
         public Texture2D Sprite; //all characters need sprite so adding it in parent class saves time
-        public int spriteSheetY { get; protected set; }
-        public int spriteSheetX { get; protected set; }
+        protected Vector2 spriteSheet;
         protected bool isFacingRight;
 
         public Level currentLevel;
@@ -68,20 +67,20 @@ namespace MonoGames_Practice_Classes.Scripts
             switch (e_currentAnimation)
             {
                 case Animations.Idle:
-                    spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 0, spriteDimensions.Width, spriteDimensions.Height), Color.White);
-                    spriteSheetY = 0;
+                    spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width + (int)spriteSheet.X, 0, spriteDimensions.Width, spriteDimensions.Height), Color.White);
                     break;
                 case Animations.Walk:
-                    spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 144, spriteDimensions.Width, spriteDimensions.Height), Color.White);
-                    if (!isFacingRight)
+                    if (isFacingRight)
                     {
-                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 144, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
+                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width + (int)spriteSheet.X, 144, spriteDimensions.Width, spriteDimensions.Height), Color.White);
+                    }   
+                    else if (!isFacingRight)
+                    {
+                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width + (int)spriteSheet.X, 144, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
                     }
-                    spriteSheetY = 144;
                     break;
                 case Animations.Jump:
-                    spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 216, spriteDimensions.Width, spriteDimensions.Height), Color.White);
-                    spriteSheetY = 216;
+                    spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width + (int)spriteSheet.X, 216, spriteDimensions.Width, spriteDimensions.Height), Color.White);
                     break;
                 default:
                     break;
@@ -160,7 +159,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 currentPosition.X -= Speed;
             }
             else if (currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Platform") &&
-                !currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height - 10, "Wall"))
+                currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height + 10, "Wall"))
             {
                 currentPosition.X -= Speed;
             }
