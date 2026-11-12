@@ -25,22 +25,47 @@ namespace MonoGames_Practice_Classes.Scripts
             switch (e_currentAnimation)
             {
                 case Animations.Idle:
-                    spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 0, spriteDimensions.Width, spriteDimensions.Height), Color.White);
+                    if (isFacingRight)
+                    {
+                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 0, spriteDimensions.Width, spriteDimensions.Height), Color.White);
+                    }
+                    else if (!isFacingRight)
+                    {
+                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 0, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
+                    }
                     spriteSheetY = 0;
                     break;
                 case Animations.Walk:
                     if (isFacingRight)
                     {
-                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 32, spriteDimensions.Width, spriteDimensions.Height), Color.White);
+                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 64, spriteDimensions.Width, spriteDimensions.Height), Color.White);
                     }
                     else if (!isFacingRight)
                     {
-                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 32, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
+                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 64, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
                     }
                     spriteSheetY = 144;
                     break;
                 case Animations.Jump:
-                    spriteBatch.Draw(Sprite, currentPosition, new Rectangle(FrameIndex * spriteDimensions.Width + spriteDimensions.Width, 160, spriteDimensions.Width, spriteDimensions.Height), Color.White);
+                    if (isFacingRight)
+                    {
+                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(0, 320, spriteDimensions.Width, spriteDimensions.Height), Color.White);
+                    }
+                    else if (!isFacingRight)
+                    {
+                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(0, 320, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
+                    }
+                    spriteSheetY = 216;
+                    break;
+                case Animations.Fall:
+                    if (isFacingRight)
+                    {
+                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(64, 320, spriteDimensions.Width, spriteDimensions.Height), Color.White);
+                    }
+                    else if (!isFacingRight)
+                    {
+                        spriteBatch.Draw(Sprite, currentPosition, new Rectangle(64, 320, spriteDimensions.Width, spriteDimensions.Height), Color.White, 0f, Vector2.Zero, 1.0f, SpriteEffects.FlipHorizontally, 0f);
+                    }
                     spriteSheetY = 216;
                     break;
                 default:
