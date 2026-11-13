@@ -2,11 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging.Effects;
-using System.IO;
-using System.Reflection;
 
 namespace MonoGames_Practice_Classes.Scripts
 {
@@ -23,22 +19,24 @@ namespace MonoGames_Practice_Classes.Scripts
         private bool JumpIsPressed;
         private string LivesText;
 
+        private RenderTarget2D renderTarget;
         public Play() //constructor that calls forth the enemy and player constructors and puts in their parameters
         {
             level = new Level();
-            player = new Player(level.GetPlayerSpawn(), 3, level, new Rectangle(0,0,64,64));
+            player = new Player(level.GetPlayerSpawn(), 3, level, new Rectangle(0, 0, 64, 64));
             for (int i = 0; i < level.basicEnemyCount;)
             {
                 enemies.Add(new Enemy(level.basicEnemySpawns[i], level, new Rectangle(0, 0, 52, 72)));
                 enemies[i].NewSpawnPoint(level.basicEnemySpawns[i]);
                 i++;
             }
-            horizonEnemy = new HorizontalEnemy(new Vector2(800, 200), level, new Rectangle(0,306,52,72));
+            horizonEnemy = new HorizontalEnemy(new Vector2(800, 200), level, new Rectangle(0, 306, 52, 72));
             JumpIsPressed = false;
         }
 
-        public void LoadContent(ContentManager cm, GraphicsDeviceManager graphics) 
+        public void LoadContent(ContentManager cm, GraphicsDeviceManager graphicsManager, GraphicsDevice graphics)
         {
+            renderTarget = new RenderTarget2D(graphics, (int)level.GetLevelSize().X, (int)level.GetLevelSize().Y);
             player.LoadContent(cm, "MainCharacterFox"); //loads the sprite sheet of CharacterSprites onto the 2D texture asset
             foreach (Enemy enemy in enemies)
             {
@@ -49,7 +47,7 @@ namespace MonoGames_Practice_Classes.Scripts
             level.LoadContent(cm, "StoneWallTexture", "Platform"); //loads the sprite sheet of the StoneWallTexture onto the 2D texture asset
         }
 
-        public E_Gamestates Update(double DeltaTime)
+        public E_Gamestates Update(double DeltaTime, GraphicsDevice graphics)
         {
             LivesText = "Lives: " + player.GetLives();
 
@@ -57,27 +55,27 @@ namespace MonoGames_Practice_Classes.Scripts
             {
                 return E_Gamestates.Menu; //takes players back to the menu if they press the escape button
             }
-            
+
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) && level.GetCurrentLevel() < 2) //if the player presses Enter then the game will reset the player and enemy positions, reset the players lives and reset the level
             {
                 level.NextLevel();
-                resetPlayingLevel();
+                resetPlayingLevel(graphics);
                 return E_Gamestates.Play;
             }
-            
+
             if (Keyboard.GetState().IsKeyDown(Keys.P) && level.GetCurrentLevel() > 1) //if the player presses P then the game will reset the player and enemy positions, reset the players lives and reset the level
             {
                 level.ResetLevels();
-                resetPlayingLevel();
+                resetPlayingLevel(graphics);
                 return E_Gamestates.Play;
             }
-            
+
             foreach (Enemy enemy in enemies)
             {
                 if (enemy.CollidesWith(player) == true || player.CollidesWith(enemy) == true) //if the player gets caught and they have no lives remaining then the player gets taken to the gameover screen
                 {
                     player.LoseLife();
-                    resetPlayingLevel();
+                    resetPlayingLevel(graphics);
                     if (player.GetLives() <= 0)
                     {
                         player.ResetLives();
@@ -95,7 +93,7 @@ namespace MonoGames_Practice_Classes.Scripts
             if (horizonEnemy.CollidesWith(player) == true || player.CollidesWith(horizonEnemy) == true) //if the player gets caught and they have no lives remaining then the player gets taken to the gameover screen
             {
                 player.LoseLife();
-                resetPlayingLevel();
+                resetPlayingLevel(graphics);
                 if (player.GetLives() <= 0)
                 {
                     player.ResetLives();
@@ -120,13 +118,14 @@ namespace MonoGames_Practice_Classes.Scripts
             horizonEnemy.UpdateAnimation(DeltaTime);
             //Console.WriteLine("Player Lives: " + player.GetLives());
             return E_Gamestates.Play;   //user continues in play state until conditions chase
-        
 
-            
+
+
         }
 
-        private void resetPlayingLevel()
+        private void resetPlayingLevel(GraphicsDevice graphics)
         {
+            renderTarget = new RenderTarget2D(graphics, (int)level.GetLevelSize().X, (int)level.GetLevelSize().Y);
             player.NewSpawnPoint(level.GetPlayerSpawn());
             //if (level.basicEnemyCount < (enemies.Count))
             //{
@@ -138,7 +137,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 if (level.basicEnemyCount > (enemies.Count))
                 {
                     enemies.Add(new Enemy(level.basicEnemySpawns[i], level, new Rectangle(0, 0, 52, 72)));
-                    
+
                 }
                 enemies[i].NewSpawnPoint(level.basicEnemySpawns[i]);
                 i++;
@@ -153,27 +152,40 @@ namespace MonoGames_Practice_Classes.Scripts
         }
 
 
-        public void Draw(GraphicsDevice graphics, SpriteBatch sprite, HUD gameHUD)
+        public void Draw(GraphicsDevice graphics, SpriteBatch sprite, HUD gameHUD, GraphicsDeviceManager graphicsManager)
         {
+            DrawRenderTarget(sprite, graphics);
             graphics.Clear(Color.CornflowerBlue);   //sets background of the playing state
-            //sprite.Begin();
-            level.Draw(sprite);
-            player.Draw(sprite);  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
-            foreach (Enemy enemy in enemies)
+            sprite.Begin();
+
+            int rectx = (int)player.GetCurrentPosition().X - graphicsManager.PreferredBackBufferWidth / 2;
+            int recty = (int)player.GetCurrentPosition().Y - graphicsManager.PreferredBackBufferHeight / 2;
+
+            if (rectx > (int)GetLevelWH().X - graphicsManager.PreferredBackBufferWidth)
             {
-                enemy.Draw(sprite);
+                rectx = (int)GetLevelWH().X - graphicsManager.PreferredBackBufferWidth;
             }
-            horizonEnemy.Draw(sprite);
+            else if (rectx < 0)
+                rectx = 0;
+
+            if (recty > (int)GetLevelWH().Y - graphicsManager.PreferredBackBufferHeight)
+            {
+                recty = (int)GetLevelWH().Y - graphicsManager.PreferredBackBufferHeight;
+            }
+            else if (recty < 0)
+                recty = 0;
+
+            sprite.Draw(renderTarget, new Vector2(0, 0), new Rectangle(rectx, recty, graphicsManager.PreferredBackBufferWidth, graphicsManager.PreferredBackBufferHeight), Color.White);
 
             gameHUD.SetMessage("Level: " + level.GetCurrentLevel());
-            gameHUD.DrawString(sprite, new Vector2(GetScreenWH().X - 200, 10), Color.Black);
+            gameHUD.DrawString(sprite, new Vector2(graphicsManager.PreferredBackBufferWidth - 200, 10), Color.Black);
             gameHUD.DrawLives(sprite, new Vector2(20, 20), player.GetLives());
             gameHUD.SetMessage("Score: " + player.GetScore());
-            gameHUD.DrawString(sprite, new Vector2(GetScreenWH().X / 2, 20), Color.Black);
-            //sprite.End();
+            gameHUD.DrawString(sprite, new Vector2(graphicsManager.PreferredBackBufferWidth / 2, 20), Color.Black);
+            sprite.End();
         }
 
-        public Vector2 GetScreenWH()
+        public Vector2 GetLevelWH()
         {
             return level.GetLevelSize(); //returns the level size to the scene manager so it can be used to set the game window size
         }
@@ -195,7 +207,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 {
                     player.SetAnimation(Creature.Animations.Walk);
                 }
-            } 
+            }
 
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
@@ -214,14 +226,14 @@ namespace MonoGames_Practice_Classes.Scripts
                 }
             }
 
-            
+
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 if (!JumpIsPressed)
                 {
                     JumpIsPressed = true;
                     player.SetIsJumping();
-                    player.SetAnimation(Creature.Animations.Jump);  
+                    player.SetAnimation(Creature.Animations.Jump);
                 }
                 //player.Up(speed);
             }
@@ -256,7 +268,21 @@ namespace MonoGames_Practice_Classes.Scripts
             player.UpdateAnimation(deltaTime); //updates the animation of the player based on the current state
 
         }
-        
 
+        private void DrawRenderTarget(SpriteBatch sprite, GraphicsDevice graphicsDevice)
+        {
+            graphicsDevice.SetRenderTarget(renderTarget);
+            graphicsDevice.Clear(Color.CornflowerBlue);
+            sprite.Begin();
+            level.Draw(sprite);
+            player.Draw(sprite);  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.Draw(sprite);
+            }
+            horizonEnemy.Draw(sprite);
+            sprite.End();
+            graphicsDevice.SetRenderTarget(null);
+        }
     }
 }

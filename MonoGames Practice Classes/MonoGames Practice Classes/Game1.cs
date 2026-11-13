@@ -25,14 +25,16 @@ namespace MonoGames_Practice_Classes
         {
             // TODO: Add your initialization logic here
             scene = new SceneManager();
-
+            
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            scene.LoadContent(Content, _graphics);
+            _graphics.PreferredBackBufferHeight = 1024;
+            _graphics.PreferredBackBufferWidth = 1664;
+            scene.LoadContent(Content, _graphics, GraphicsDevice);
 
 
             // TODO: use this.Content to load your game content here
@@ -41,9 +43,9 @@ namespace MonoGames_Practice_Classes
         protected override void Update(GameTime gameTime)
         {
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                //Exit();
+            //Exit();
 
-            scene.Update(this, gameTime);
+            scene.Update(this, gameTime, GraphicsDevice);
 
             double deltaTime = gameTime.ElapsedGameTime.TotalSeconds;
             // TODO: Add your update logic here
@@ -55,7 +57,7 @@ namespace MonoGames_Practice_Classes
             //GraphicsDevice.Clear(Color.FromNonPremultiplied(Red, Green, Blue, 225));
 
             // TODO: Add your drawing code here
-            scene.Draw(GraphicsDevice, _spriteBatch);
+            scene.Draw(_graphics, _spriteBatch, GraphicsDevice);
 
             base.Draw(gameTime);
         }
