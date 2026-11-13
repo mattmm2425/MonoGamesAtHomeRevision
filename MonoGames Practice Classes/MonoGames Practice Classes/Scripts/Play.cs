@@ -47,7 +47,7 @@ namespace MonoGames_Practice_Classes.Scripts
             level.LoadContent(cm, "StoneWallTexture", "Platform"); //loads the sprite sheet of the StoneWallTexture onto the 2D texture asset
         }
 
-        public E_Gamestates Update(double DeltaTime, GraphicsDevice graphics)
+        public E_Gamestates Update(double DeltaTime, GraphicsDevice graphics, GraphicsDeviceManager graphicsManager)
         {
             LivesText = "Lives: " + player.GetLives();
 

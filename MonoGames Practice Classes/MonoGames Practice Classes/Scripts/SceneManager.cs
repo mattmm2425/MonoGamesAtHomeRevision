@@ -33,7 +33,7 @@ namespace MonoGames_Practice_Classes.Scripts
             gameHUD = new HUD();
         }
 
-        public void Update(Game1 game, GameTime time, GraphicsDevice graphicsDevice)
+        public void Update(Game1 game, GameTime time, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsManager)
         {
             double deltaTime = time.ElapsedGameTime.TotalSeconds;
 
@@ -44,7 +44,7 @@ namespace MonoGames_Practice_Classes.Scripts
                     gameHUD.SetMessage("Start Game");
                     break;
                 case E_Gamestates.Play:
-                    SwitchState(playing.Update(deltaTime, graphicsDevice));
+                    SwitchState(playing.Update(deltaTime, graphicsDevice, graphicsManager));
                     break;
                 case E_Gamestates.GameOver:
                     SwitchState(gameEnd.Update(deltaTime));

@@ -45,7 +45,7 @@ namespace MonoGames_Practice_Classes
             //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             //Exit();
 
-            scene.Update(this, gameTime, GraphicsDevice);
+            scene.Update(this, gameTime, GraphicsDevice, _graphics);
 
             double deltaTime = gameTime.ElapsedGameTime.TotalSeconds;
             // TODO: Add your update logic here
