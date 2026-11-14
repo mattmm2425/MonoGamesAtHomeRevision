@@ -25,7 +25,7 @@ namespace MonoGames_Practice_Classes.Scripts
 
         protected int maxHeight;    //used for the jump method, once the player reaches the max height the player will start to fall
         protected int currentHeight;    //used for the jump method, checks if the player has reached the max height
-        protected float Speed = 3f; //used for the movement methods
+        protected float Speed; //used for the movement methods
 
         protected float FallSpeed = 3f; //used for the down movement method
         protected int maxFrameIndex;    //used for the animation method, checks if the player has reached the max frame index, made it a variable because different animations will have different amount of frames in them.
@@ -52,6 +52,7 @@ namespace MonoGames_Practice_Classes.Scripts
             currentLevel = playLevel;
             spriteDimensions = ParamSpriteDimensions;
             isJumping = false;
+            Speed = 3f;
             maxHeight = 170;
             currentHeight = 0;
             FrameIndex = 0;

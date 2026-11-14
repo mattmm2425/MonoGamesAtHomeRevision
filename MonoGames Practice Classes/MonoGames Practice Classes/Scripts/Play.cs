@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace MonoGames_Practice_Classes.Scripts
@@ -20,6 +21,12 @@ namespace MonoGames_Practice_Classes.Scripts
         private string LivesText;
 
         private RenderTarget2D renderTarget;
+
+        private Texture2D background;
+        private Texture2D background2;
+        private Texture2D foreground;
+        private Texture2D foreground2;
+        private Vector2 playingPosition;
         public Play() //constructor that calls forth the enemy and player constructors and puts in their parameters
         {
             level = new Level();
@@ -45,6 +52,11 @@ namespace MonoGames_Practice_Classes.Scripts
             }
             horizonEnemy.LoadContent(cm, "OrcEnemySprites");
             level.LoadContent(cm, "StoneWallTexture", "Platform"); //loads the sprite sheet of the StoneWallTexture onto the 2D texture asset
+
+            background = cm.Load<Texture2D>("BackgroundSunnyLand");
+            background2 = cm.Load<Texture2D>("middle");
+            foreground = cm.Load<Texture2D>("tree");
+            foreground2 = cm.Load<Texture2D>("rock-2");
         }
 
         public E_Gamestates Update(double DeltaTime, GraphicsDevice graphics, GraphicsDeviceManager graphicsManager)
@@ -108,12 +120,13 @@ namespace MonoGames_Practice_Classes.Scripts
 
             horizonEnemy.JumpOrFall();
             player.JumpOrFall();
-            PlayerMovement(DeltaTime); //calls movement function
+            PlayerMovement(DeltaTime, graphicsManager); //calls movement function
             foreach (Enemy enemy in enemies)
             {
                 enemy.Chase(player);    //calls enemy chase function and inputs new instance of the player so the enemy character knows who to chases
                 enemy.UpdateAnimation(DeltaTime); //updates the animation of the enemy based on the current state
             }
+            Console.WriteLine(playingPosition.X);
             horizonEnemy.Chase(player);
             horizonEnemy.UpdateAnimation(DeltaTime);
             //Console.WriteLine("Player Lives: " + player.GetLives());
@@ -154,7 +167,7 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public void Draw(GraphicsDevice graphics, SpriteBatch sprite, HUD gameHUD, GraphicsDeviceManager graphicsManager)
         {
-            DrawRenderTarget(sprite, graphics);
+            DrawRenderTarget(sprite, graphics, graphicsManager);
             graphics.Clear(Color.CornflowerBlue);   //sets background of the playing state
             sprite.Begin();
 
@@ -190,11 +203,21 @@ namespace MonoGames_Practice_Classes.Scripts
             return level.GetLevelSize(); //returns the level size to the scene manager so it can be used to set the game window size
         }
 
-        private void PlayerMovement(double deltaTime)    //player movement function that takes in an input of speed
+        private void PlayerMovement(double deltaTime, GraphicsDeviceManager graphicsManager)    //player movement function that takes in an input of speed
         {
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
                 player.Right();
+
+                if (player.GetCanScroll())
+                {
+                    if (player.GetCurrentPosition().X < (int)GetLevelWH().X - graphicsManager.PreferredBackBufferWidth / 2 &&
+                        player.GetCurrentPosition().X > graphicsManager.PreferredBackBufferWidth/2)
+                    {
+                        playingPosition.X -= player.GetSpeed();
+                    }
+                }
+
                 if (player.GetIsJumping() == true)
                 {
                     player.SetAnimation(Creature.Animations.Jump);
@@ -212,6 +235,16 @@ namespace MonoGames_Practice_Classes.Scripts
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
                 player.Left();
+
+                if (player.GetCanScroll())
+                {
+                    if (player.GetCurrentPosition().X < (int)GetLevelWH().X - graphicsManager.PreferredBackBufferWidth / 2 &&
+                        player.GetCurrentPosition().X > graphicsManager.PreferredBackBufferWidth / 2)
+                    {
+                        playingPosition.X += player.GetSpeed();
+                    }
+                }
+
                 if (player.GetIsJumping() == true)
                 {
                     player.SetAnimation(Creature.Animations.Jump);
@@ -269,11 +302,15 @@ namespace MonoGames_Practice_Classes.Scripts
 
         }
 
-        private void DrawRenderTarget(SpriteBatch sprite, GraphicsDevice graphicsDevice)
+        private void DrawRenderTarget(SpriteBatch sprite, GraphicsDevice graphicsDevice, GraphicsDeviceManager graphicsManager)
         {
             graphicsDevice.SetRenderTarget(renderTarget);
             graphicsDevice.Clear(Color.CornflowerBlue);
             sprite.Begin();
+            for (int Back1 = 0; Back1 < 2; Back1++)
+            {
+                sprite.Draw(background, new Vector2((background.Width * Back1) + playingPosition.X * -0.5f, 0), new Rectangle(0, 0, background.Width, background.Height), Color.White);
+            }
             level.Draw(sprite);
             player.Draw(sprite);  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
             foreach (Enemy enemy in enemies)
