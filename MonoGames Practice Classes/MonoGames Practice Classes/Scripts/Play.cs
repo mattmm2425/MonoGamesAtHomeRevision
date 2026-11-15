@@ -55,7 +55,7 @@ namespace MonoGames_Practice_Classes.Scripts
 
             background = cm.Load<Texture2D>("BackgroundSunnyLand");
             background2 = cm.Load<Texture2D>("middle");
-            foreground = cm.Load<Texture2D>("tree");
+            foreground = cm.Load<Texture2D>("Tree");
             foreground2 = cm.Load<Texture2D>("rock-2");
         }
 
@@ -309,7 +309,11 @@ namespace MonoGames_Practice_Classes.Scripts
             sprite.Begin();
             for (int Back1 = 0; Back1 < 2; Back1++)
             {
-                sprite.Draw(background, new Vector2((background.Width * Back1) + playingPosition.X * -0.5f, 0), new Rectangle(0, 0, background.Width, background.Height), Color.White);
+                sprite.Draw(background, new Vector2((background.Width * Back1) + playingPosition.X * -0.1f, 0), new Rectangle(0, 0, background.Width, background.Height), Color.White);
+            }
+            for (int Back2 = 0; Back2 < 15; Back2++)
+            {
+                sprite.Draw(background2, new Vector2((background2.Width * Back2) + playingPosition.X * -0.25f, 800), new Rectangle(0, 0, background2.Width, background2.Height), Color.White);
             }
             level.Draw(sprite);
             player.Draw(sprite);  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet
@@ -318,6 +322,13 @@ namespace MonoGames_Practice_Classes.Scripts
                 enemy.Draw(sprite);
             }
             horizonEnemy.Draw(sprite);
+            if (level.GetCurrentLevel() == 1)
+            {
+                for (int Front1 = 0; Front1 < 6; Front1++)
+                {
+                    sprite.Draw(foreground, new Vector2((foreground.Width * Front1 * 4) - playingPosition.X * -0.45f, 850), new Rectangle(0, 0, foreground.Width, foreground.Height), Color.White);
+                }
+            }
             sprite.End();
             graphicsDevice.SetRenderTarget(null);
         }
