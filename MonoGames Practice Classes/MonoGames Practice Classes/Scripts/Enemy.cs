@@ -40,7 +40,7 @@ namespace MonoGames_Practice_Classes.Scripts
             if (player.GetCurrentPosition().Y < currentPosition.Y) // if th player is above the enemy, move up
             {
                 e_currentAnimation = Animations.Jump;
-                Up(FallSpeed);
+                Up(Speed);
             }
         }
 

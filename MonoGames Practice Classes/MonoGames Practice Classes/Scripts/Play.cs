@@ -51,7 +51,7 @@ namespace MonoGames_Practice_Classes.Scripts
                 enemySprite = enemy.Sprite;
             }
             horizonEnemy.LoadContent(cm, "OrcEnemySprites");
-            level.LoadContent(cm, "StoneWallTexture", "Platform"); //loads the sprite sheet of the StoneWallTexture onto the 2D texture asset
+            level.LoadContent(cm, "StoneWallTexture", "platform-wood"); //loads the sprite sheet of the StoneWallTexture onto the 2D texture asset
 
             background = cm.Load<Texture2D>("BackgroundSunnyLand");
             background2 = cm.Load<Texture2D>("middle");

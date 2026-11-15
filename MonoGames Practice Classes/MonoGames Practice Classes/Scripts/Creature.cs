@@ -52,8 +52,8 @@ namespace MonoGames_Practice_Classes.Scripts
             currentLevel = playLevel;
             spriteDimensions = ParamSpriteDimensions;
             isJumping = false;
-            Speed = 3f;
-            maxHeight = 170;
+            Speed = 3.5f;
+            maxHeight = 200;
             currentHeight = 0;
             FrameIndex = 0;
             currentFrameTime = 0;
@@ -127,9 +127,9 @@ namespace MonoGames_Practice_Classes.Scripts
             bool OnPlatform;
             bool SameRow;
 
-            OnFloor = currentLevel.IsWallOrPlatform((int)currentPosition.X,
+            OnFloor = currentLevel.IsWallOrPlatform((int)currentPosition.X + 5,
                 (int)currentPosition.Y + (spriteDimensions.Height - 1) + (int)Speed, "Wall") ||
-                currentLevel.IsWallOrPlatform((int)currentPosition.X + (spriteDimensions.Width - 1),
+                currentLevel.IsWallOrPlatform((int)currentPosition.X + (spriteDimensions.Width - 5),
                 (int)currentPosition.Y + (spriteDimensions.Height - 1) + (int)Speed, "Wall");
 
             OnPlatform = currentLevel.IsWallOrPlatform((int)currentPosition.X,
@@ -166,8 +166,10 @@ namespace MonoGames_Practice_Classes.Scripts
                 currentPosition.X -= Speed; //move character left by using speed
                 CanScroll = true;
             }
-            else if (currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Platform") ||   //checks if the top left corner of the character is colliding with a platform OR
-                currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height + 10, "Platform"))   //checks if the bottom left corner of the character is colliding with a platform    //if either of these are true, the character is allowed to move left to move underneath platforms on the same row as the player.
+            else if ((currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Platform") || currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height / 2, "Platform")) &&
+                !currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height + 20, ("Platform")))    //checks to see if the top of the player is touching a platform AND if the bottom of the player isn't touching a platform.
+                                                                                                                                                //If the player is below the platform they will be able to walk since the bottom of the player will fall either into a wall cell or an empty cell
+                                                                                                                                                //but if the player is on the side of the platform (near the top of the platform cell) the bottom of the player will still be touching the platform cell and stop collision.
             {
                 currentPosition.X -= Speed; //move character left by using speed
                 CanScroll = true;
@@ -186,13 +188,15 @@ namespace MonoGames_Practice_Classes.Scripts
                 currentPosition.X += Speed; //moves character to the right by using speed
                 CanScroll = true;
             }
-            else if (currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width + 1, (int)currentPosition.Y + spriteDimensions.Height + 10, "Platform") ||   //checks if the character is collding on the bottom right corner with a platform OR
-                currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Platform")) //checks if the character is colliding on the top right corner with a platform      //if either of these are true, the character is allowed to move right to move underneath platforms on the same row as the player.
-            {   //
-                currentPosition.X += Speed; //moves character to the right by using speed
+            else if ((currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Platform") || currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height / 2, "Platform")) &&
+                !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height + 20, ("Platform")))   //checks to see if the top of the player is touching a platform AND if the bottom of the player isn't touching a platform.
+                                                                                                                                                                            //If the player is below the platform they will be able to walk since the bottom of the player will fall either into a wall cell or an empty cell
+                                                                                                                                                                            //but if the player is on the side of the platform (near the top of the platform cell) the bottom of the player will still be touching the platform cell and stop collision.
+            {
+                currentPosition.X += Speed; //move character left by using speed
                 CanScroll = true;
             }
-            else 
+            else
             {
                 CanScroll = true;
             }
@@ -216,10 +220,10 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public bool CollidesWith(Creature creature) //checks if the character collides with another creature
         {
-            if (currentPosition.X <= creature.GetCurrentPosition().X + creature.spriteDimensions.Width - 1 &&
-               currentPosition.X + spriteDimensions.Width - 1 >= creature.GetCurrentPosition().X &&
-               currentPosition.Y <= creature.GetCurrentPosition().Y + creature.spriteDimensions.Height - 1 &&
-               currentPosition.Y + spriteDimensions.Height - 1 >= creature.GetCurrentPosition().Y)
+            if (currentPosition.X <= creature.GetCurrentPosition().X + creature.spriteDimensions.Width - 5 &&
+               currentPosition.X + spriteDimensions.Width - 5 >= creature.GetCurrentPosition().X &&
+               currentPosition.Y <= creature.GetCurrentPosition().Y + creature.spriteDimensions.Height - 5 &&
+               currentPosition.Y + spriteDimensions.Height - 5 >= creature.GetCurrentPosition().Y)
             {
                 return true;
             }
