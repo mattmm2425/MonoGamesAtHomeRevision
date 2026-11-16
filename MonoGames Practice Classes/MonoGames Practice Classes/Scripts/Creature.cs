@@ -327,5 +327,10 @@ namespace MonoGames_Practice_Classes.Scripts
         {
             return CanScroll;
         }
+
+        public void Death()
+        {
+            isDead = true;
+        }
     }
 }
