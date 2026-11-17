@@ -150,6 +150,12 @@ namespace MonoGames_Practice_Classes.Scripts
                 isFalling = false;
             }
 
+            if (currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + (spriteDimensions.Height - 1), "DeathBarrier") ||
+                currentLevel.IsWallOrPlatform((int)currentPosition.X + (spriteDimensions.Width - 1), (int)currentPosition.Y + (spriteDimensions.Height - 1), "DeathBarrier" ))
+            { 
+                isDead = true;
+            }
+
             /*
             if (!currentLevel.IsWall((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height - 1) &&
                 !currentLevel.IsWall((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Width - 1))
@@ -160,6 +166,13 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public virtual void Left() //moves character left by 1 unit on the X axis
         {
+            if (currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "DeathBarrier") &&
+                currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height - 1, "DeathBarrier"))
+            { 
+                isDead = true;
+            }
+
+
             if (!currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y, "Both") &&   //checks if the top left corner of the character is not colliding with a wall or platform AND
                 !currentLevel.IsWallOrPlatform((int)currentPosition.X, (int)currentPosition.Y + spriteDimensions.Height - 1, "Both"))   //checks if the bottom left corner of the character is not colliding with a wall or platform
             {
@@ -182,6 +195,12 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public virtual void Right() //moves character right by 1 unit on the X axis
         {
+            if (currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height - 1, "DeathBarrier") || 
+                currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "DeathBarrier"))
+            {   
+                isDead = true;
+            }
+
             if (!currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y + spriteDimensions.Height - 1, "Both") &&    //checks if the character is not colliding on the bottom right corner with a wall or platform AND
                 !currentLevel.IsWallOrPlatform((int)currentPosition.X + spriteDimensions.Width - 1, (int)currentPosition.Y, "Both"))    //checks if the character is not colliding on the top right corner with a wall or platform
             {
@@ -205,6 +224,7 @@ namespace MonoGames_Practice_Classes.Scripts
         public void ResetPosition() //resets character position to starting position
         {
             currentPosition = startPosition;
+            isDead = false;
         }
 
         public Vector2 GetCurrentPosition() //gets the current position of the character
@@ -328,9 +348,9 @@ namespace MonoGames_Practice_Classes.Scripts
             return CanScroll;
         }
 
-        public void Death()
+        public bool Death()
         {
-            isDead = true;
+           return isDead;
         }
     }
 }

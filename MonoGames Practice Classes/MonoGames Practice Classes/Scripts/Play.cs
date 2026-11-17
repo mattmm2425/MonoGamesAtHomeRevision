@@ -86,8 +86,9 @@ namespace MonoGames_Practice_Classes.Scripts
             {
                 if (enemy.CollidesWith(player) == true || player.CollidesWith(enemy) == true) //if the player gets caught and they have no lives remaining then the player gets taken to the gameover screen
                 {
-                    player.LoseLife();
-                    resetPlayingLevel(graphics);
+                    player.Knockback(enemy, DeltaTime);
+                    //player.LoseLife();
+                    //resetPlayingLevel(graphics);
                     if (player.GetLives() <= 0)
                     {
                         player.ResetLives();
@@ -104,6 +105,23 @@ namespace MonoGames_Practice_Classes.Scripts
 
             if (horizonEnemy.CollidesWith(player) == true || player.CollidesWith(horizonEnemy) == true) //if the player gets caught and they have no lives remaining then the player gets taken to the gameover screen
             {
+                player.LoseLife();
+                player.Knockback(horizonEnemy, DeltaTime);
+                //resetPlayingLevel(graphics);
+                if (player.GetLives() <= 0)
+                {
+                    player.ResetLives();
+                    level.ResetLevels();
+                    return E_Gamestates.GameOver;
+                }
+                else
+                {
+                    return E_Gamestates.Play;
+                }
+            }
+
+            if (player.isDead) //checks to see if the player has died
+            { 
                 player.LoseLife();
                 resetPlayingLevel(graphics);
                 if (player.GetLives() <= 0)
@@ -126,7 +144,6 @@ namespace MonoGames_Practice_Classes.Scripts
                 enemy.Chase(player);    //calls enemy chase function and inputs new instance of the player so the enemy character knows who to chases
                 enemy.UpdateAnimation(DeltaTime); //updates the animation of the enemy based on the current state
             }
-            Console.WriteLine(playingPosition.X);
             horizonEnemy.Chase(player);
             horizonEnemy.UpdateAnimation(DeltaTime);
             //Console.WriteLine("Player Lives: " + player.GetLives());
@@ -311,9 +328,9 @@ namespace MonoGames_Practice_Classes.Scripts
             {
                 sprite.Draw(background, new Vector2((background.Width * Back1) + playingPosition.X * -0.1f, 0), new Rectangle(0, 0, background.Width, background.Height), Color.White);
             }
-            for (int Back2 = 0; Back2 < 15; Back2++)
+            for (int Back2 = 0; Back2 < 25; Back2++)
             {
-                sprite.Draw(background2, new Vector2((background2.Width * Back2) + playingPosition.X * -0.25f, 800), new Rectangle(0, 0, background2.Width, background2.Height), Color.White);
+                sprite.Draw(background2, new Vector2((background2.Width * Back2) + playingPosition.X * -0.25f, GetLevelWH().Y - 350), new Rectangle(0, 0, background2.Width, background2.Height), Color.White);
             }
             level.Draw(sprite);
             player.Draw(sprite);  //creates a rectangle on the spritesheet that will be placed on given coordinates and outputs whatever sprite is there. 0,0 is the top left corner of the sprite sheet

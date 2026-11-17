@@ -11,6 +11,7 @@ namespace MonoGames_Practice_Classes.Scripts
         private int lives;
         private int initialLives;
         private int score;
+        private bool invincible;
 
         public Player(Vector2 startPos, int paramLives, Level paramCurrentLevel, Rectangle rect) : base(startPos, paramCurrentLevel, rect) //constructor for the play class to use to create an instance of the player once playing has begun
         {
@@ -18,6 +19,7 @@ namespace MonoGames_Practice_Classes.Scripts
             lives = paramLives;     //using speed as an input parameter so can change speed from play script (getting comfortable with overriding and adding input parameters into constructors)
             score = 0;
             e_currentAnimation = Animations.Idle;
+            invincible = false;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -107,7 +109,12 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public void LoseLife()
         {
-            lives--;
+            if (!invincible)
+            {
+                lives--;
+                isDead = false;
+                invincible = true;
+            }
         }
 
         public void ResetLives()
@@ -120,5 +127,19 @@ namespace MonoGames_Practice_Classes.Scripts
             maxFrameIndex = 3;
         }
 
+
+        public void Knockback(Creature creature, double DeltaTime)
+        { 
+            double maxTime =0.1;
+            Vector2 knockBackDirection = currentPosition - creature.GetCurrentPosition();
+            for (double currentTime = 0; currentTime <= maxTime; currentTime += DeltaTime)
+            {
+                Console.WriteLine("current time is " + currentTime + "max Time is" + maxTime + "delta time is " + DeltaTime);
+                currentPosition += knockBackDirection/2;
+                currentPosition.Y -= 10;
+            }
+            invincible = false;
+            //LoseLife();
+        }
     }
 }

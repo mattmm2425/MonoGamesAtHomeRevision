@@ -128,6 +128,11 @@ namespace MonoGames_Practice_Classes.Scripts
 
         public bool IsWallOrPlatform(int X, int Y, string type)
         {
+            if (type  == "DeathBarrier" && levelContent[(int)(Y / textureWH.Y)][(int)(X / textureWH.X)] == '/') //checks to see if the player is hitting a death barrier
+            { 
+                return true;
+            }
+
             if (type == "Wall" && levelContent[(int)(Y / textureWH.Y)][(int)(X / textureWH.X)] == 'W')
             {
                 return true;
