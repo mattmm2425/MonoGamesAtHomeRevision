@@ -107,6 +107,11 @@ namespace MonoGames_Practice_Classes.Scripts
             return score;
         }
 
+        public void AddScore(int addScore)
+        {
+            score += addScore;
+        }
+
         public void LoseLife()
         {
             if (!invincible)
